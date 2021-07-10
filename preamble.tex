@@ -1,0 +1,102 @@
+\usepackage{booktabs}
+\usepackage{xcolor} 
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray97}{gray}{.97}
+\definecolor{airforceblue}{rgb}{0.36, 0.54, 0.66}
+\definecolor{Mahogany}{rgb}{0.75, 0.25, 0.0}
+\definecolor{Olive}{rgb}{0.5, 0.5, 0.0}
+\definecolor{colortitulo}{RGB}{219,68,14} % 
+\definecolor{colordominante}{RGB}{243,102,25}
+\definecolor{colordominanteF}{RGB}{219,68,14}
+\definecolor{colordominanteD}{RGB}{137,46,55}
+\definecolor{mostaza}{RGB}{231,196,25}
+\definecolor{amarilloM}{RGB}{248,199,90}
+\definecolor{amarilloD}{RGB}{251,237,121}
+\definecolor{grisamarillo}{RGB}{248,248,245} 
+\definecolor{azulF}{rgb}{.0,.0,.3}
+\definecolor{grisD}{rgb}{.3,.3,.3}
+\definecolor{grisF}{rgb}{.82,.82,.82}
+\definecolor{miverde}{RGB}{44,162,67}
+\newcommand{\verde}{\color{miverde}}
+
+\usepackage{listings}
+% Puede usar lstlisting|texto| para código en el texto
+\lstset{ 
+	language=R,                     % the language of the code
+	basicstyle=\footnotesize\ttfamily, % the size of the fonts that are used for the code
+	%numbers=left,                   % where to put the line-numbers
+	%numberstyle=\tiny\color{Blue},  % the style that is used for the line-numbers
+	%stepnumber=1,                   % the step between two line-numbers. If it is 1, each line
+	% will be numbered
+	%numbersep=5pt,                  % how far the line-numbers are from the code
+	frame=single,
+	framextopmargin=3pt,
+	framexbottommargin=3pt,
+	framexleftmargin=0.4cm,
+	backgroundcolor=\color{gray97},
+	showspaces=false,               % show spaces adding particular underscores
+	showstringspaces=false,         % underline spaces within strings
+	showtabs=false,                 % show tabs within strings adding particular underscores
+	frame=single,                   % adds a frame around the code
+	rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+	tabsize=2,                      % sets default tabsize to 2 spaces
+	captionpos=b,                   % sets the caption-position to bottom
+	breaklines=true,                % sets automatic line breaking
+	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+	keywordstyle=\color{Mahogany},      % keyword style
+	commentstyle=\color{airforceblue},   % comment style
+	stringstyle=\color{Olive}      % string literal style
+} 
+
+
+%\usepackage[width=17cm,height=23cm]{geometry}
+%\geometry{bindingoffset=1.2cm}
+\textheight=22cm
+\textwidth=15.5cm
+\topmargin=-1cm
+\oddsidemargin = -0cm %margen izquierdo, página impar
+\evensidemargin = -0cm %margen izquierdo, página par
+
+\newcommand{\helv}{\fontfamily{phv}\fontsize{9}{11}\selectfont}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{} % borra cabecera y pie actuales
+\fancyhead[LE,RO]{\helv\thepage} %Left Even page - Right Odd page
+\fancyhead[LO]{\helv\rightmark}
+\fancyhead[RE]{\helv\leftmark}
+%\renewcommand{\headrulewidth}{0pt} % Sin raya. Con raya?: cambiar {0} por {0.5pt}
+%\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.5pt} % grosor 0.5pt
+\addtolength{\headheight}{0.5pt} % espacio para la raya
+\fancyheadoffset{0 cm} %Controla el tamaño de la línea
+
+
+
+\usepackage{mdframed}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{lemma}{Lema}[chapter]
+\newtheorem{corollary}{Corolario}[chapter]
+\newtheorem{proposition}{Proposición}[chapter]
+\newtheorem{conjecture}{Conjecture}[chapter]
+
+\newtheorem{del}{Definición}[chapter]
+\newenvironment{definition}
+{\begin{mdframed}[backgroundcolor=grisF, rightline=false,leftline=false,topline=false, bottomline=false]\begin{del}}
+		{\end{del}\end{mdframed}}
+
+\newtheorem{example}{Ejemplo}[chapter]
+\newtheorem{exercise}{Ejercicio}[chapter]
+\newtheorem{hypothesis}{Hypothesis}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{Nota: }
+\newtheorem*{solution}{Solución}
+
+\parskip=0.4cm
+\parindent=3mm

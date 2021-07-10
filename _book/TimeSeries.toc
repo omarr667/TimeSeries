@@ -1,0 +1,5 @@
+\babel@toc {spanish}{}
+\contentsline {chapter}{Prólogo}{5}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Series de Tiempo}{7}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introducción}{7}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objetivos del análisis de series de tiempo}{9}{section.1.2}%

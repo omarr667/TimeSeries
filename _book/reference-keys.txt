@@ -1,0 +1,14 @@
+def:unlabeled-div-1
+fig:plotBaseSeries
+fig:plotSeriests
+fig:plotSeriexts
+fig:plotTendenciaCONELDO
+fig:boxplotPeriodicidadCONELDO
+fig:plotPeriodicidadCONELDO-1
+fig:plotPeriodicidadCONELDO-2
+series-de-tiempo
+introducción
+objetivos-del-análisis-de-series-de-tiempo
+ejemplo-de-series-de-tiempo
+consumo-de-energía-eléctrica-doméstica
+consumo-de-energía-eléctrica-doméstica-1

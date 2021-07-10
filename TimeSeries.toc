@@ -1,0 +1,11 @@
+\selectlanguage *{spanish}
+\contentsline {chapter}{Prólogo}{5}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Series de Tiempo}{7}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introducción}{7}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objetivos del análisis de series de tiempo}{9}{section.1.2}%
+\contentsline {subsubsection}{Describir}{9}{section*.3}%
+\contentsline {subsubsection}{Explicación}{10}{section*.4}%
+\contentsline {subsubsection}{Predicción}{10}{section*.5}%
+\contentsline {subsubsection}{Control}{10}{section*.6}%
+\contentsline {section}{\numberline {1.3}Ejemplo de series de tiempo}{10}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Consumo de energía eléctrica doméstica}{10}{subsection.1.3.1}%

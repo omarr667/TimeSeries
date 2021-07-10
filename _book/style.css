@@ -1,0 +1,28 @@
+.book .book-body .page-wrapper .page-inner {
+  max-width: 950px !important;
+}
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+body {
+  text-align: justify;
+}
+div.boxgray {
+  font-weight: bold;
+  color: red;
+}
+.definition {
+  padding: 10px;
+  background-color: #E0E0E0;
+}

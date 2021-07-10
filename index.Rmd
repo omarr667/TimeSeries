@@ -1,0 +1,40 @@
+--- 
+title: "Series de Tiempo"
+author: "Omar Rodríguez Torres (omarr667@ciencias.unam.mx)"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+lang: es
+bibliography:
+- book.bib
+- packages.bib
+biblio-style: apalike
+link-citations: yes
+description: Notas sobre el análisis de series de tiempo
+---
+
+# Prólogo{-}
+
+Estas notas corresponden al curso de Modelos de Supervivencia y de Series de Tiempo contemplados en el [plan de estudio](http://www.fciencias.unam.mx/licenciatura/asignaturas/2017/1739) en la Facultad de Ciencias de la Universidad Nacional Autónoma de México para las licenciaturas de actuaría, matemáticas y matemáticas aplicadas.
+
+El siguiente texto esta enfocado para los interesados que desean abordar el tema de series de tiempo, aunque su lectura puede ser relevante para cualquier interesado se desea que el lector tenga conocimientos solidos en probabilidad y en temas de estadística inferencial, así por la naturaleza de este curso, se tenga noción de las funciones básicas de programación en R. 
+
+
+Este texto fue generado en bookdown a través de R 3.6.3, con el entorno de desarrollo (IDE) Rstudio, así como el texto PDF generado a por medio de LATEX. Para generar el libro (compilar) puede ser recomendable instalar la última versión de [RStudio]((https://www.rstudio.com/products/rstudio/download/)) y la versión de desarrollo de `bookdown` disponible en [Github](https://github.com/rstudio/bookdown). 
+
+
+```{r echo=FALSE, fig.align='left'}
+knitr::include_graphics("images/by-sa-88x31.png")
+```
+
+Esta obra está bajo una licencia de [Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional](https://creativecommons.org/licenses/by-sa/4.0/deed.es).
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+# funciones auxiliares
+inline <- function(x = "") paste0("`` `r ", x, "` ``")
+inline2 <- function(x = "") paste0("`r ", x, "`")
+```

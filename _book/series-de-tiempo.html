@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es" xml:lang="es">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 1 Series de Tiempo | Series de Tiempo</title>
+  <meta name="description" content="Notas sobre el análisis de series de tiempo" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 1 Series de Tiempo | Series de Tiempo" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas sobre el análisis de series de tiempo" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 1 Series de Tiempo | Series de Tiempo" />
+  
+  <meta name="twitter:description" content="Notas sobre el análisis de series de tiempo" />
+  
+
+<meta name="author" content="Omar Rodríguez Torres (omarr667@ciencias.unam.mx)" />
+
+
+<meta name="date" content="2021-07-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Series de tiempo</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prólogo</a></li>
+<li class="chapter" data-level="1" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html"><i class="fa fa-check"></i><b>1</b> Series de Tiempo</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html#objetivos-del-análisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>1.2</b> Objetivos del análisis de series de tiempo</a></li>
+<li class="chapter" data-level="1.3" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html#ejemplo-de-series-de-tiempo"><i class="fa fa-check"></i><b>1.3</b> Ejemplo de series de tiempo</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html#consumo-de-energía-eléctrica-doméstica"><i class="fa fa-check"></i><b>1.3.1</b> Consumo de energía eléctrica doméstica</a></li>
+<li class="chapter" data-level="1.3.2" data-path="series-de-tiempo.html"><a href="series-de-tiempo.html#consumo-de-energía-eléctrica-doméstica-1"><i class="fa fa-check"></i><b>1.3.2</b> Consumo de energía eléctrica doméstica</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="series-de-tiempo" class="section level1" number="1">
+<h1><span class="header-section-number">Capítulo 1</span> Series de Tiempo</h1>
+<div id="introducción" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Introducción</h2>
+<p>El ser humano desde que es consciente del tiempo se encuentra interesado en predecir eventos futuros y con ello estar preparados para afrontar dichos sucesos; de esta forma los primeros humanos podrían haberse interesados en eventos ambientales como ¿El día de mañana habrá un buen clima? ¿Encontraremos alimento y agua suficiente? etcétera. Las personas con más experiencia, con conocimiento más empírico, podrían tener una noción del clima viendo el cielo, nubes o inclusive las constelaciones para detectar en la temporada en la que se encontraban y así hacer un pronóstico.</p>
+<p>En tiempos posteriores, saciando los requerimientos básicos de vida (alimento, vestido, vivienda), los aspectos que querían conocer del futuro eran otros, por lo que, viendo la inquietud incesante de los seres humanos sobre el tema, surgen aspectos místicos, mitológicos e inclusive mágicos, que buscan dar respuestas a estas inquietudes. Así es como surgen en todas las partes del mundo profecías, desde los mexicas en el que tenía profetizado la llegada de Quetzalcóatl o establecimiento de la ciudad de Tenochtitlan, en Grecia con los oráculos, el cual es una respuesta dada por un dios a una pregunta personal, concerniente generalmente al futuro, como método de adivinación, el cual posiblemente el oráculo más famoso puede consultarse en la tragedia griega de Edipo Rey, o las profecías establecidas en la biblia. Aunque muchos de estos elementos han desaparecidos, existen otros que están muy presentes en nuestra cultura, principalmente en la religión, pero también ha cobrado relevancia los chamanes, adivinos, profetas, lectura de tarot, hasta las galletas chinas de la suerte tienen como finalidad predecir el futuro inmediato, de manera subsecuente, brinda a las personas a una situación de tranquilidad o preparación sobre el pronóstico dado.</p>
+<p>Todos estos pronósticos son basados en conocimiento empírico de los practicantes, sin cuestionar la efectividad de las predicciones, muchas de ellas no son métodos demasiados exactos o carecen de rigurosidad pues son temas un tanto subjetivos a los ojos del practicante, por ejemplo, en la lectura de cartas cada tarotista puede tener un concepto o idea diferente en la interpretación de cada carta; además la experiencia, aunque es buena, muchas veces puede fallar, por ejemplo puede haber días nublados en el que muchos pensarían que va a llover, sin embargo, termina el día sin que caiga alguna gota del cielo, otro ejemplo sería pronosticar el clima en verano, aunque la mayoría de las veces los días son calurosos en esta época, no se podría afirmar que todos los días sean cálidos pues puede existir algún día en el que el clima sea frío aún en verano, es por eso que es de gran importancia crear métodos estadísticos que contengan un mayor rigor matemático, sean reproducible para cualquier persona y sean más objetivos en su análisis.</p>
+<p>Desde el lado científico, por medio de modelos estadísticos y matemáticos, también se ha buscado dar solución a la inquietud sobre el futuro, por lo que se han desarrollado diversos modelos que buscan proyectar la información y así poder tener un bosquejo de los datos en tiempos posteriores para que así se disminuya la incertidumbre del futuro y tanto personas, empresas y gobiernos puedan definir una estrategia y planeación hacia ese futuro estimado.</p>
+<p>Desde luego cada modelo tiene una serie de requerimientos y objetivos diferentes, pero de manera general todos los modelos requieren que los datos a estimar sean cuantificables de una manera estándar para todas las observaciones, para ello usan información del pasado y presente para así proyectar la información a un tiempo posterior del que se tiene registro. Además dichos modelos buscan disminuir el error en la estimación, es decir, cada modelo busca que la diferencia entre la observación real y la esperada sean lo más similar posible.</p>
+<p>Uno de esos modelos es el análisis de series de tiempo, en dicho modelo se busca encontrar tendencias entenderlas y así proyectar los datos con técnicas que se estarán abordando más adelante, para dicho estudio se requerirá una serie de datos a lo largo del tiempo, para ello se definirá a una serie de tiempo como:</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-1" class="definition"><strong>Definición 1.1  </strong></span>Una serie de tiempo es una secuencia ordenada cronológicamente de observaciones cuantitativas que se encuentran espaciadas entre sí de manera uniforme.</p>
+</div>
+<p>En las series de tiempo se analiza las observaciones en el pasado para así predecir el futuro, lo que permite gestionar y tomar decisiones con la debida información. Un análisis de series de tiempo cuantifica las principales características de los datos y las variaciones aleatorias. Por estas razones, combinadas con la mejora de los sistemas computacionales, han hecho que los métodos de series temporales se apliquen ampliamente en la administración, la industria y el comercio.</p>
+<p>Una serie de tiempo se dice que es <strong>continua</strong> cuando sus observaciones ocurren en un tiempo continuo, por ejemplo, el mercado accionario tiene este tipo de comportamiento pues en cada instante dentro del horario bancario existe un precio nuevo como respuesta a los flujos de mercado en ese momento, cabe destacar que una serie puede ser continua, aunque el valor de la variable de interés se comporte de manera discreta. De manera análoga, una serie puede considerarse discreta cuando las observaciones ocurren de una manera discreta, es decir, las observaciones son registradas de manera espaciada y uniforme entre sí a o lo largo del tiempo.</p>
+<p>Este texto se enfocará principalmente a la serie de tiempo discreta, por lo que a menos que se especifique lo contrario, al referirse a una serie de tiempo se supondrá que los tiempos ocurren de manera espaciada entre sí. Cabe mencionar que en caso de existir una serie de tiempo continua se podrá transformar en una serie de tiempo discreta, tomando medidas resumen en un periodo de tiempo discreto, por ejemplo, en el mercado accionario, aunque el precio sea continuo, al final del día se muestra el precio final con el que cerro la acción, otras medidas puede ser la suma o promedio de todas las precipitaciones captada durante un mes.</p>
+<p>En la industria, comercio, ciencia, así como en la mayoría de las ramas académicas y profesionales se miden variables cuantitativas de manera secuencial en el tiempo. Por ejemplo, en economía, las <strong>tasas de interés y las tasas de cambio</strong> se registran cada día, basta consultar algún sitio web financiero para obtener el valor de las tasas a lo largo del tiempo, por la naturaleza del mismo, se tiene una periodicidad de información diaria (en acciones y algunos instrumentos financieros, la periodicidad es diaria omitiendo fines de semana y días festivos), sin embargo, dependiendo de la variable de interés se pueden seleccionar intervalos de tiempo diferentes, por ejemplo: la cantidad de <strong>lluvia</strong> registrada en un pluviómetro en una cierta zona se puede registrar de manera mensual representando el promedio de mm de agua caída; los cambios de <strong>temperaturas</strong> a lo largo del día se pueden medir cada hora en una estación meteorológica; o por ejemplo el <strong>Producto Interno Bruto (PIB) </strong> de un cierto país calculado trimestralmente. De manera general, cuando una variable cuantitativa se mide secuencialmente en el tiempo durante un intervalo fijo (o intervalo de muestreo), los datos forman una serie de tiempo.</p>
+<p>A lo largo de este texto se representará a la serie de tiempo de tamaño <span class="math inline">\(n\)</span> con la notación: <span class="math display">\[\left\{x_t : t=1,\ldots, n\right\},\]</span> por lo que cada observación de la serie es representada como
+<span class="math display">\[\left\{x_1,x_2, \ldots, x_n\right\}.\]</span></p>
+<p>Para fines convivencia, se supondrá que la abreviación <span class="math inline">\(x_t\)</span> hace referencia a una serie de tiempo en el <span class="math inline">\(t\)</span>-ésimo momento de tamaño <span class="math inline">\(n\)</span>, a menos de que se especifique lo contrario, donde <span class="math inline">\(0&lt; t \le n\)</span>. Mientras que la abreviación <span class="math inline">\(\hat{x}_t\)</span> hace referencia al valor estimado por el modelo de serie de tiempo elegido.</p>
+<p>Algunos libros hacen notar que:</p>
+<ul>
+<li><p>Si <span class="math inline">\(t\le n\)</span> entonces se le conocen a <span class="math inline">\(\hat{x}_t\)</span> como predicción (prediction)</p></li>
+<li><p>Si <span class="math inline">\(t &gt; n\)</span> entonces se le conocen a <span class="math inline">\(\hat{x}_t\)</span> como pronóstico (forecast)</p></li>
+</ul>
+<p>A diferencia de mucha de la teoría estadística, la cual se basa en muestras aleatorias de observaciones independientes, en series de tiempo se establece que las observaciones dependen de cierta medida una de la otra, es de gran importancia resaltar esta idea ya que si las observaciones dependen en gran medida de otras observaciones entonces se puede encontrar esta relación y así poder estimar valores futuros a partir de valores ya conocidos. Si los datos fueran independientes entre sí, se tendría un comportamiento prácticamente aleatorio por lo que no se podría realizar buenas predicciones. Si la serie de tiempo puede ser predicha exactamente por un modelo de series de tiempo, entonces se dice que la serie es <strong>determinista</strong>, de lo contrario se dice que la serie es <strong>estocástica</strong>, sin embargo, un buen modelo, aunque no sea determinista, puede ayudar a identificar situaciones que se podrían presentar en un futuro inmediato calculado a partir de las observaciones con las que se tiene registro.</p>
+</div>
+<div id="objetivos-del-análisis-de-series-de-tiempo" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Objetivos del análisis de series de tiempo</h2>
+<p>Como anteriormente de manera general se describió la elaboración de un análisis de series de tiempo es muy útil ya que proporciona varios elementos que pueden ser analizados para describir, comprender, explicar, estimar y prevenir el suceso o fenómeno que se estudia:</p>
+<div id="describir" class="section level4 unnumbered">
+<h4>Describir</h4>
+<p>Generalmente en un análisis de series de tiempo, el primer paso es graficar la información, ya que visualmente se pueden detectar muchas de las características de la información analizada, por ejemplo, se puede detectar la tendencia de la serie, identificar patrones que los datos van siguiendo a lo largo del tiempo, identificar unidades de tendencia central como la media, moda, rango, así como identificar mínimos, máximo, valores atípicos, y variación de la información, más adelante se hablará con más detalle de algunas de estas propiedades.<br />
+De igual menara describir estos elementos nos ayuda a describir si un análisis de series de tiempo puede ser o no elaborado. Por ejemplo, si la serie tiene un comportamiento completamente aleatorio tendríamos que optar por otros métodos. De igual forma si la serie tiene valores atípicos tendríamos que dar solución a esas observaciones. El tratamiento de valores atípicos es un tema bastante complejo en el que se tiene que respaldar con teoría y con práctica, ya que si consideramos este valor extremo puede que el punto de influencia se alto y el resultado sea alterado por este valor, si lo quitamos entonces podríamos sobreajustar el modelo y nuevamente el resultado no sería adecuado. Para estos casos en particular se debe ajustar modelos robustos ya que no son sensibles a valores atípicos.</p>
+</div>
+<div id="explicación" class="section level4 unnumbered">
+<h4>Explicación</h4>
+<p>En la siguiente sección se analizará series de tiempo más específicas, sin embargo, en muchas series la información tiene aspectos de gran relevancia tal como la tendencia y periodicidad, por ejemplo, si se consulta el PIB de los Estados Unidos de 1960 a 2019, el lector puede observar que el valor del PIB tiene una tendencia positiva ya que ha estado en un gran crecimiento prácticamente exponencial, es decir, año con año el PIB aumenta mostrando que existe una tendencia positiva de los datos. Pero no sólo la tendencia puede ser apreciada, también en muchas otras series puede observarse que existe información que sigue un patrón año con año, por ejemplo, supongamos un país cualquiera, si analizara el PIB posiblemente en la temporada de invierno, cuarto trimestre del año, el PIB podría aumentar considerablemente por el gran derrame económico que implica vacaciones y época decembrina, sin embargo, un trimestre posterior también puede observarse que debido al gasto ocasionado en el cuarto trimestre, el PIB puede disminuir pues la demanda de servicios y productos es menor, este ciclo puede observarse que se repite año tras año y esto es a lo que en un primer momento denominaremos <strong>periodicidad</strong> o <strong>variación estacional</strong></p>
+</div>
+<div id="predicción" class="section level4 unnumbered">
+<h4>Predicción</h4>
+<p>Dada una secuencia de series de tiempo, después de entender y dar explicación al comportamiento de los datos, el lector puede estar interesado en hacer pronostico o predicciones con las técnicas que estemos analizado a lo largo de este texto</p>
+</div>
+<div id="control" class="section level4 unnumbered">
+<h4>Control</h4>
+<p>Una vez hecha una predicción, las estimaciones deben pasar por un proceso de evaluación; como primera medida, debemos de graficar las observaciones reales con las observaciones estimadas para ver si visualmente tiene un comportamiento deseado. Hay técnicas más avanzadas como <em>cross-validation</em> o validación cruzada en la que se forman dos bases de datos una base de entrenamiento en el que cual se trabaja y se construyen los modelos y una de pruebas donde se observa si el modelo puede ser replicado y da los resultados esperados. Más adelante se detallará este proceso de control y de aceptación del modelo</p>
+</div>
+</div>
+<div id="ejemplo-de-series-de-tiempo" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Ejemplo de series de tiempo</h2>
+<p>A lo largo de este texto se trabajará con diversas bases de datos, las cuales se estará definiendo en cada ejercicio que se realice, sin embargo, la teoría a desarrollar se basará en 3 diferentes series de tiempo, las cuales se mencionarán a continuación:</p>
+<div id="consumo-de-energía-eléctrica-doméstica" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Consumo de energía eléctrica doméstica</h3>
+<p>El Instituto Nacional de Estadística y Geografía (INEGI) publica de manera mensual una serie de valores económicos de México, uno de ellos hace referencia al consumo de energía eléctrica doméstica total en miles de millones de watts/hora en el territorio mexicano, por practicidad a esta serie de tiempo se le denominará CONELDO.</p>
+<p>Para este trabajó se extrajo de manera mensual, desde la página oficial del INEGI, el consumo de energía eléctrica acumulado en el periodo desde enero 2009 hasta diciembre 2017, dichos resultados serán mostrados por medio del siguiente vector, recuerde que un vector en R, debe iniciar por la letra c, prefijo de concatenate, seguido de paréntesis y dentro de ellos se ingresa cada observación separado por comas.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="series-de-tiempo.html#cb1-1" aria-hidden="true" tabindex="-1"></a>CONELDO<span class="ot">=</span><span class="fu">c</span>(<span class="dv">2861</span>, <span class="dv">2833</span>,   <span class="dv">2686</span>,   <span class="dv">2798</span>,   <span class="dv">3123</span>,   <span class="dv">3232</span>,   <span class="dv">3377</span>,   <span class="dv">3545</span>,   <span class="dv">3558</span>,   </span>
+<span id="cb1-2"><a href="series-de-tiempo.html#cb1-2" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3275</span>, <span class="dv">3079</span>,   <span class="dv">2792</span>,   <span class="dv">2825</span>,   <span class="dv">2769</span>,   <span class="dv">2655</span>,   <span class="dv">2735</span>,   <span class="dv">2996</span>,   <span class="dv">3282</span>,</span>
+<span id="cb1-3"><a href="series-de-tiempo.html#cb1-3" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3594</span>, <span class="dv">3544</span>,   <span class="dv">3633</span>,   <span class="dv">3422</span>,   <span class="dv">3220</span>,   <span class="dv">2859</span>,   <span class="dv">2998</span>,   <span class="dv">3062</span>,   <span class="dv">2907</span>,</span>
+<span id="cb1-4"><a href="series-de-tiempo.html#cb1-4" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3012</span>, <span class="dv">3349</span>,   <span class="dv">3537</span>,   <span class="dv">3688</span>,   <span class="dv">3632</span>,   <span class="dv">3792</span>,   <span class="dv">3608</span>, <span class="dv">3274</span>, <span class="dv">3049</span>,</span>
+<span id="cb1-5"><a href="series-de-tiempo.html#cb1-5" aria-hidden="true" tabindex="-1"></a>          <span class="dv">2999</span>, <span class="dv">2990</span>,   <span class="dv">2983</span>,   <span class="dv">3068</span>,   <span class="dv">3279</span>,   <span class="dv">3440</span>,   <span class="dv">3636</span>,   <span class="dv">3670</span>,   <span class="dv">3835</span>,</span>
+<span id="cb1-6"><a href="series-de-tiempo.html#cb1-6" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3605</span>, <span class="dv">3436</span>,   <span class="dv">3126</span>,   <span class="dv">3126</span>,   <span class="dv">3120</span>,   <span class="dv">2905</span>,   <span class="dv">2992</span>,   <span class="dv">3272</span>,   <span class="dv">3524</span>,</span>
+<span id="cb1-7"><a href="series-de-tiempo.html#cb1-7" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3732</span>, <span class="dv">3807</span>,   <span class="dv">3793</span>,   <span class="dv">3631</span>,   <span class="dv">3481</span>,   <span class="dv">3203</span>,   <span class="dv">3230</span>,   <span class="dv">3176</span>,   <span class="dv">3005</span>,   </span>
+<span id="cb1-8"><a href="series-de-tiempo.html#cb1-8" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3119</span>, <span class="dv">3382</span>,   <span class="dv">3543</span>,   <span class="dv">3820</span>,   <span class="dv">3985</span>,   <span class="dv">3950</span>,   <span class="dv">3743</span>,   <span class="dv">3512</span>,   <span class="dv">3211</span>,</span>
+<span id="cb1-9"><a href="series-de-tiempo.html#cb1-9" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3229</span>, <span class="dv">3212</span>,   <span class="dv">3043</span>,   <span class="dv">3188</span>,   <span class="dv">3483</span>,   <span class="dv">3678</span>,   <span class="dv">3896</span>,   <span class="dv">4142</span>,   <span class="dv">4190</span>,   </span>
+<span id="cb1-10"><a href="series-de-tiempo.html#cb1-10" aria-hidden="true" tabindex="-1"></a>          <span class="dv">4063</span>, <span class="dv">3847</span>,   <span class="dv">3482</span>,   <span class="dv">3415</span>,   <span class="dv">3330</span>,   <span class="dv">3063</span>,   <span class="dv">3284</span>, <span class="dv">3677</span>, <span class="dv">3964</span>,</span>
+<span id="cb1-11"><a href="series-de-tiempo.html#cb1-11" aria-hidden="true" tabindex="-1"></a>          <span class="dv">4211</span>, <span class="dv">4296</span>,   <span class="dv">4310</span>,   <span class="dv">4142</span>,   <span class="dv">3858</span>,   <span class="dv">3591</span>,   <span class="dv">3371</span>,   <span class="dv">3331</span>,   <span class="dv">3297</span>,</span>
+<span id="cb1-12"><a href="series-de-tiempo.html#cb1-12" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3396</span>, <span class="dv">3753</span>,   <span class="dv">3967</span>,   <span class="dv">4322</span>,   <span class="dv">4341</span>,   <span class="dv">4398</span>,   <span class="dv">4213</span>,   <span class="dv">3867</span>,   <span class="dv">3509</span>)</span>
+<span id="cb1-13"><a href="series-de-tiempo.html#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="series-de-tiempo.html#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(CONELDO)</span></code></pre></div>
+<pre><code>##   [1] 2861 2833 2686 2798 3123 3232 3377 3545 3558 3275 3079 2792 2825 2769 2655
+##  [16] 2735 2996 3282 3594 3544 3633 3422 3220 2859 2998 3062 2907 3012 3349 3537
+##  [31] 3688 3632 3792 3608 3274 3049 2999 2990 2983 3068 3279 3440 3636 3670 3835
+##  [46] 3605 3436 3126 3126 3120 2905 2992 3272 3524 3732 3807 3793 3631 3481 3203
+##  [61] 3230 3176 3005 3119 3382 3543 3820 3985 3950 3743 3512 3211 3229 3212 3043
+##  [76] 3188 3483 3678 3896 4142 4190 4063 3847 3482 3415 3330 3063 3284 3677 3964
+##  [91] 4211 4296 4310 4142 3858 3591 3371 3331 3297 3396 3753 3967 4322 4341 4398
+## [106] 4213 3867 3509</code></pre>
+<p>El vector que se acaba de construir recibe el nombre de CONELDO, la anterior ejecución provocó que los valores se cargaran en el espacio de trabajo dentro de la memoria del equipo donde se ejecutó, sin embargo, aún el tiempo no se encuentra indexado, para ello necesitamos construir un objeto de series de tiempo dentro de R, la declaración de este objeto es de la forma:</p>
+<pre><code>ts(vector, start=c(anio, periodo), frequency=frecuencia)</code></pre>
+<p>Donde <em>start</em>, es un vector con el año y el periodo del primer dato y <em>frequency</em> la frecuencia en el que se registran los datos. Siguiendo la anterior descripción podemos convertir el vector CONELDO en un objeto de series de tiempo que denominaremos CONELDO.ts</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="series-de-tiempo.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se convierte la base en un modelo de series de tiempo</span></span>
+<span id="cb4-2"><a href="series-de-tiempo.html#cb4-2" aria-hidden="true" tabindex="-1"></a>CONELDO.ts<span class="ot">=</span><span class="fu">ts</span>(CONELDO,<span class="at">start =</span><span class="dv">2009</span>,<span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb4-3"><a href="series-de-tiempo.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(CONELDO.ts)</span></code></pre></div>
+<pre><code>##       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+## 2009 2861 2833 2686 2798 3123 3232 3377 3545 3558 3275 3079 2792
+## 2010 2825 2769 2655 2735 2996 3282 3594 3544 3633 3422 3220 2859
+## 2011 2998 3062 2907 3012 3349 3537 3688 3632 3792 3608 3274 3049
+## 2012 2999 2990 2983 3068 3279 3440 3636 3670 3835 3605 3436 3126
+## 2013 3126 3120 2905 2992 3272 3524 3732 3807 3793 3631 3481 3203
+## 2014 3230 3176 3005 3119 3382 3543 3820 3985 3950 3743 3512 3211
+## 2015 3229 3212 3043 3188 3483 3678 3896 4142 4190 4063 3847 3482
+## 2016 3415 3330 3063 3284 3677 3964 4211 4296 4310 4142 3858 3591
+## 2017 3371 3331 3297 3396 3753 3967 4322 4341 4398 4213 3867 3509</code></pre>
+<p>Nótese que como la información empieza en el primer periodo del año 2009 se puede abreviar el parámetro start sólo como 2009, además observe que en este último bloque de código el tiempo se encuentra indexado. Ya que se indicó una periodicidad igual a 12, R entiende que se está ingresando datos de manera mensual por lo que lo acomodará el resultado en un arreglo donde cada columna corresponde a un mes y cada renglón a un año. Al tener indexado el tiempo se puede apreciar que se tiene acceso a funciones de identificación como, <em>class()</em> para identificar la clase del objeto que se acaba de crear, <em>start()</em> para identificar el comienzo de los datos, <em>end()</em> para encontrar el tiempo de la última observación, <em>frequency()</em> para mostrar la frecuencia de la serie, <em>summary()</em> para obtener algunas de las medidas básicas como media, mediana, cuartiles, mínimos y máximos, <em>cycle()</em> para mostrar el ciclo que sigue los datos en el tiempo dependiendo de la frecuencia dada.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="series-de-tiempo.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(CONELDO.ts)<span class="co">#El formato de la serie de tiempo es</span></span></code></pre></div>
+<pre><code>## [1] &quot;ts&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="series-de-tiempo.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">start</span>(CONELDO.ts)<span class="co">#El incio de la serie de tiempo es</span></span></code></pre></div>
+<pre><code>## [1] 2009    1</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="series-de-tiempo.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">frequency</span>(CONELDO.ts)<span class="co">#La frecuencia de la serie de tiempo es</span></span></code></pre></div>
+<pre><code>## [1] 12</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="series-de-tiempo.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CONELDO.ts) <span class="co">#Información de la distribución de los datos</span></span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    2655    3120    3406    3438    3699    4398</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="series-de-tiempo.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cycle</span>(CONELDO.ts)  <span class="co">#Ciclos de la serie de tiempo</span></span></code></pre></div>
+<pre><code>##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+## 2009   1   2   3   4   5   6   7   8   9  10  11  12
+## 2010   1   2   3   4   5   6   7   8   9  10  11  12
+## 2011   1   2   3   4   5   6   7   8   9  10  11  12
+## 2012   1   2   3   4   5   6   7   8   9  10  11  12
+## 2013   1   2   3   4   5   6   7   8   9  10  11  12
+## 2014   1   2   3   4   5   6   7   8   9  10  11  12
+## 2015   1   2   3   4   5   6   7   8   9  10  11  12
+## 2016   1   2   3   4   5   6   7   8   9  10  11  12
+## 2017   1   2   3   4   5   6   7   8   9  10  11  12</code></pre>
+<p>La ventaja de convertir datos en objetos de serie de tiempo es que facilita el trabajo y análisis de muchos de estos modelos pues al indexar en una misma variable, el valor de cada observación, así como el tiempo de ocurrencia, evita la sobrecarga de memoria y declaración de variables. Por ejemplo, siguiendo la idea básica de programación en R, se tendría que manejar una variable de tiempo y otra de datos, así para poder graficar una serie de tiempo podría realizarse el siguiente código:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="series-de-tiempo.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#Librería a ocupar para graficar</span></span>
+<span id="cb16-2"><a href="series-de-tiempo.html#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="series-de-tiempo.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Se crea una tabla en la cual se tenga los datos y las fechas</span></span>
+<span id="cb16-4"><a href="series-de-tiempo.html#cb16-4" aria-hidden="true" tabindex="-1"></a>CONELDO.base <span class="ot">=</span> <span class="fu">data.frame</span>(CONELDO, </span>
+<span id="cb16-5"><a href="series-de-tiempo.html#cb16-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">time =</span> <span class="fu">seq</span>(<span class="fu">ISOdate</span>(<span class="dv">2009</span>,<span class="dv">01</span>,<span class="dv">01</span>), </span>
+<span id="cb16-6"><a href="series-de-tiempo.html#cb16-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="fu">ISOdate</span>(<span class="dv">2017</span>,<span class="dv">12</span>,<span class="dv">01</span>),</span>
+<span id="cb16-7"><a href="series-de-tiempo.html#cb16-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">by =</span> <span class="st">&quot;month&quot;</span>) </span>
+<span id="cb16-8"><a href="series-de-tiempo.html#cb16-8" aria-hidden="true" tabindex="-1"></a>                          )</span>
+<span id="cb16-9"><a href="series-de-tiempo.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Se imprime en pantalla los primeros 5 renglones</span></span>
+<span id="cb16-10"><a href="series-de-tiempo.html#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(CONELDO.base)</span></code></pre></div>
+<pre><code>##   CONELDO                time
+## 1    2861 2009-01-01 12:00:00
+## 2    2833 2009-02-01 12:00:00
+## 3    2686 2009-03-01 12:00:00
+## 4    2798 2009-04-01 12:00:00
+## 5    3123 2009-05-01 12:00:00
+## 6    3232 2009-06-01 12:00:00</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="series-de-tiempo.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Se grafica con ggplot</span></span>
+<span id="cb18-2"><a href="series-de-tiempo.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CONELDO.base, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> CONELDO))<span class="sc">+</span> <span class="co">#Se inicializa la gráfica</span></span>
+<span id="cb18-3"><a href="series-de-tiempo.html#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&#39;steelblue&#39;</span>) <span class="sc">+</span> <span class="co">#Se declara una gráfica de línea</span></span>
+<span id="cb18-4"><a href="series-de-tiempo.html#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Tiempo&#39;</span>, <span class="at">y =</span> <span class="st">&#39;Miles de millones Watts/h&#39;</span>, </span>
+<span id="cb18-5"><a href="series-de-tiempo.html#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&#39;Serie de Consumo Energía Eléctrica doméstica&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:plotBaseSeries"></span>
+<img src="TimeSeries_files/figure-html/plotBaseSeries-1.png" alt="Gráfica con ggplot usando programación nativa de R" width="672" />
+<p class="caption">
+Figura 1.1: Gráfica con ggplot usando programación nativa de R
+</p>
+</div>
+<p>La gráfica <a href="series-de-tiempo.html#fig:plotBaseSeries">1.1</a> es adecuada ya que usa una potente herramienta de graficación como lo es <em>ggplot</em>, sin embargo, tuvo que crearse 3 diferentes objectos, una base de datos llamada <em>CONELDO.base</em>, un vector donde se encuentran los valores de la serie de tiempo _CONELDO _y un vector que recibe el nombre de <em>time</em> el cual contiene una secuencia de fechas. Si se usará el objeto time series (ts) estas declaraciones no serían necesarias pues en este objeto se indexa el tiempo, así en el siguiente código puede observar que el resultado es equivalente al observado en la gráfica <a href="series-de-tiempo.html#fig:plotBaseSeries">1.1</a>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="series-de-tiempo.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(CONELDO.ts,  <span class="at">xlab=</span> <span class="st">&#39;Tiempo&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;Miles de millones Watts/h&#39;</span>,</span>
+<span id="cb19-2"><a href="series-de-tiempo.html#cb19-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;Serie de Consumo Energía Eléctrica doméstica&#39;</span>,</span>
+<span id="cb19-3"><a href="series-de-tiempo.html#cb19-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">&#39;steelblue&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:plotSeriests"></span>
+<img src="TimeSeries_files/figure-html/plotSeriests-1.png" alt="Gráfica con plot usando el objeto ts" width="672" />
+<p class="caption">
+Figura 1.2: Gráfica con plot usando el objeto ts
+</p>
+</div>
+<p>Otra manera de poder graficar los datos a través de R es basándose en la librería <em>xts</em>, este paquete incorpora una extensión al objeto <em>ts</em> que viene por defecto en la instalación de R. El beneficio de <em>xts</em> es que se pueden implementar varios tipos de gráficas auxiliares de series de tiempo, dentro del proceso de graficación ayuda a generar gráficas con un mayor control sobre los ejes además de añadir líneas en puntos de interés para ubicar mejor el tiempo y etiquetas más personalizadas. El proceso es similar al obtenido en la figura @ref{fig:plotSerie}, sin embargo , es necesario convertir el objeto <strong>ts</strong> a uno <strong>xts</strong>, para ello se usará la función <em>as.xts()</em>, además sobre la gráfica se añadirá la opción <em>major.ticks</em> para añadir etiquetas en el eje de las <span class="math inline">\(X\)</span> según lo indiquemos, dentro de este parámetro se pueden indicar especificar los siguientes valores, ‘auto’,‘minute’, ‘hours’, ‘days’, ‘weeks’, ‘months’, ‘quarters’, y ‘years’, pare periodos, automático, minutos, horas, días, semanas, meses, trimestres y años, respectivamente.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="series-de-tiempo.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb20-2"><a href="series-de-tiempo.html#cb20-2" aria-hidden="true" tabindex="-1"></a>CONELDO.xts <span class="ot">=</span> <span class="fu">as.xts</span>(CONELDO.ts)</span>
+<span id="cb20-3"><a href="series-de-tiempo.html#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="series-de-tiempo.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(CONELDO.xts, <span class="at">col =</span> <span class="st">&#39;steelblue&#39;</span>, </span>
+<span id="cb20-5"><a href="series-de-tiempo.html#cb20-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">grid.ticks.on =</span> <span class="st">&#39;quarters&#39;</span>, <span class="co">#Crea líneas verticales sobre la gráfica cada trimestre</span></span>
+<span id="cb20-6"><a href="series-de-tiempo.html#cb20-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">major.ticks =</span> <span class="st">&#39;quarters&#39;</span>,  <span class="co">#Crea líneas verticales sobre la gráfica cada trimestre</span></span>
+<span id="cb20-7"><a href="series-de-tiempo.html#cb20-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">minor.ticks =</span><span class="st">&#39;years&#39;</span>, <span class="co"># Escribe la etiqueta de los meses cada cierto tiempo</span></span>
+<span id="cb20-8"><a href="series-de-tiempo.html#cb20-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">grid.col =</span> <span class="st">&#39;lightgrey&#39;</span>, <span class="co">#color líneas verticales</span></span>
+<span id="cb20-9"><a href="series-de-tiempo.html#cb20-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&#39;Serie de Consumo Energía Eléctrica doméstica&#39;</span></span>
+<span id="cb20-10"><a href="series-de-tiempo.html#cb20-10" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb20-11"><a href="series-de-tiempo.html#cb20-11" aria-hidden="true" tabindex="-1"></a>     )</span></code></pre></div>
+<div class="figure"><span id="fig:plotSeriexts"></span>
+<img src="TimeSeries_files/figure-html/plotSeriexts-1.png" alt="Gráfica con plot usando el objeto xts" width="672" />
+<p class="caption">
+Figura 1.3: Gráfica con plot usando el objeto xts
+</p>
+</div>
+<p>Las gráficas que se acaban de realizar son adecuadas, sin embargo, cada una de ellas tiene sus ventajas y desventajas, desde luego no son las únicas formas de graficar series de tiempo en R existen otros paquetes externos dentro de la cual destaca <em>zoo</em>. A pesar de ello, a lo largo de este texto se usará de manera indiferente cada uno de los tres métodos mostrados anteriormente, ya que son los más generales y destacan en los siguiente:</p>
+<ul>
+<li>La gráfica con <em>ggplot2</em> (figura <a href="series-de-tiempo.html#fig:plotBaseSeries">1.1</a>) es la gráfica más estética de las 3 que se acaban de realizar, sin embargo, aunque es muy personalizable la cantidad de código que hay que considerar es mayor que los otros dos métodos presentados. Además por la manera en que se programa dicha gráfica no admitirá el objeto <em>ts</em>, por lo que se tiene que crear una tabla o <em>data.frame</em> en la cual en una columna deberá ser almacenado el valor de la serie de tiempo, y en otra las fechas o tiempos en que ocurrió cada observación.</li>
+<li>La gráfica usando el objeto <em>ts</em> y <em>plot()</em> (figura <a href="series-de-tiempo.html#fig:plotSeriests">1.2</a>) es la gráfica más sencilla de implementar debido a que el comando <em>plot()</em> acepta el objeto <em>ts</em> y en dicha variable se encuentra indexado el tiempo, sólo será necesario indicar el nombre de las etiquetas y colores de la línea que sigue la serie de tiempo. El resultado es aceptable, sin embargo, estéticamente es la gráfica más sencilla de las presentadas anteriormente- Ya que no se tiene mucho control sobre las etiquetas del eje de las <span class="math inline">\(X\)</span> y <span class="math inline">\(Y\)</span> puede ocasionar que el lector se pierda en el tiempo y sea difícil comparar datos en un intervalo.</li>
+<li>La gráfica usando el objeto <em>xts</em> (figura <a href="series-de-tiempo.html#fig:plotSeriexts">1.3</a>) es la más equilibrada de todas, el código es más sencillo y un poco menos vistosa que la gráfica <a href="series-de-tiempo.html#fig:plotBaseSeries">1.1</a> usando <em>ggplot</em> pero es más atractiva y ligeramente más elaborada que la gráfica <a href="series-de-tiempo.html#fig:plotSeriests">1.2</a>. Al incorporar y controlar las líneas verticales en el eje de las <span class="math inline">\(X\)</span> permite que el lector se ubique mejor en el tiempo y pueda comprar resultados. El aspecto negativo es que se tendrá que crear un nuevo objeto del tipo <em>xts</em> lo cual consumirá un pequeño pero existente lugar en la memoria y espacio de trabajo.</li>
+</ul>
+<p>Una vez seleccionado la gráfica que más beneficie al lector, la tarea subsecuente será analizar los datos en cuestión, se puede concluir que debido a las gráficas y en el resumen de la información, resultado de la función <em>summary()</em>, la serie de tiempo tiene un valor mínimo de <span class="math inline">\(2,655\)</span>, máximo de <span class="math inline">\(4,398\)</span> y medio de <span class="math inline">\(3,438\)</span> mil millones Watts/hora, así mismo, en la gráfica de la serie de tiempo los datos presentan características comunes a muchas series económicas. Por ejemplo, es evidente que el <strong>consumo de energía aumenta con el tiempo</strong>, por lo que parece haber una clara <strong>tendencia creciente</strong>. También hay un ciclo evidente en los datos ya que se detecta una periodicidad anual, es decir, hay una clara <strong>variación estacional</strong> en los datos que da como resultado que en un año calendario los datos sean parecidos entre si en el mismo periodo de tiempo, como se puede llegar a apreciar, en todos los años el primer trimestre del año se tiene un consumo bajo de energía, después empieza a aumentar hasta alcanzar máximos locales a mediados de año y de ahí su consumo comienza a disminuir, dicho patrón se repite año con año por lo que se concluye que existe una periodicidad anual en la información.</p>
+<p>La <strong>comprensión de las causas probables</strong> de las características de la serie puede formar una guía útil en el diseño y creación de un <strong>modelo de serie de tiempo apropiado</strong>. Para el caso particular de la serie CONELDO, las posibles causas que pueden incluir son:
+* El aumento de la demanda de energía tiene una tendencia al alta pues el avance tecnológico y herramientas cada vez más sofisticadas hacen que el consumo eléctrico sea cada vez mayor.</p>
+<ul>
+<li>De igual forma, la tendencia al alta se puede deber a que existe en el país un crecimiento poblacional evidente y una mayor facilidad de adquisición de productos eléctricos.</li>
+<li>El aumento de la demanda en ciertas épocas del año podría causarse debido a los períodos vacacionales, en específico a las de verano, ya que la serie al enfocarse al consumo eléctrico domestico esta temporada es cuando las personas pasan más tiempo en casa haciendo así que el consumo aumente.</li>
+</ul>
+<p>Una gráfica de serie de tiempo no solo es importante para revelar patrones y características de los datos, sino que también puede revelar valores <strong>atípicos potenciales o valores erróneos</strong>, en inglés nombrados como <strong>outliers</strong>. Por ejemplo, los datos faltantes a veces se codifican con un valor negativo, como 0 o como valores ausentes (NA); obviamente, dichos valores tendrían que tratarse de manera diferente en el análisis, y ciertamente no querrían incluirse como observaciones al ajustar un modelo a los datos, así que habría que realizar técnicas de imputación de los datos para solucionar dichos problemas.</p>
+<p>Para obtener una visión más clara de la tendencia, R incorpora funciones que tratan de estimar la tendencia realizando una media móvil centrada de orden relativo a la periodicidad de la información, más adelante se detallará este proceso, pero en este primer acercamiento se usará la función de <em>aggregate()</em> para detectar gráficamente la tendencia sin el efecto de la periodicidad.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="series-de-tiempo.html#cb21-1" aria-hidden="true" tabindex="-1"></a>CONELDO.tendencia <span class="ot">=</span> <span class="fu">aggregate</span>(CONELDO.ts)</span>
+<span id="cb21-2"><a href="series-de-tiempo.html#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(CONELDO.tendencia, <span class="at">col=</span><span class="st">&#39;steelblue&#39;</span>, </span>
+<span id="cb21-3"><a href="series-de-tiempo.html#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">main=</span><span class="st">&#39;Tendencia del consumo eléctrico&#39;</span>,</span>
+<span id="cb21-4"><a href="series-de-tiempo.html#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab=</span> <span class="st">&#39;Tiempo&#39;</span>,</span>
+<span id="cb21-5"><a href="series-de-tiempo.html#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab=</span><span class="st">&#39;Miles de Wats/h&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:plotTendenciaCONELDO"></span>
+<img src="TimeSeries_files/figure-html/plotTendenciaCONELDO-1.png" alt="Gráfica de la tendencia de la serie CONELDO" width="672" />
+<p class="caption">
+Figura 1.4: Gráfica de la tendencia de la serie CONELDO
+</p>
+</div>
+<p>Tal y como se observa en la gráfica @ref{fig:plotTendenciaCONELDO} existe una tendencia positiva, no es una tendencia lineal ya que existen aumentos significativos a lo largo del tiempo, pero a pesar de ello, la se serie nunca decrece en el tiempo en el periodo de observación, lo que refuerza al comentario hecho en los puntos anteriores.</p>
+<p>De igual manera como sucede en el código anterior se puede poner especial atención a la periodicidad de la serie de tiempo, para ello se usará la función <em>cycle</em> y <em>boxplot</em> para elaborar gráficas de caja para cada mes y observar como es el desempeño de la serie de tiempo en dicha periodicidad. Si existiese una variación estacional entonces los patrones podrían ser fácilmente observado con ayuda del siguiente código.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="series-de-tiempo.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(CONELDO.ts <span class="sc">~</span> <span class="fu">cycle</span>(CONELDO.ts),</span>
+<span id="cb22-2"><a href="series-de-tiempo.html#cb22-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>, <span class="co"># Color de relleno</span></span>
+<span id="cb22-3"><a href="series-de-tiempo.html#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">&quot;brown&quot;</span>, <span class="co">#Color de contorno</span></span>
+<span id="cb22-4"><a href="series-de-tiempo.html#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main=</span><span class="st">&#39;Consumo eléctrico doméstico&#39;</span>,</span>
+<span id="cb22-5"><a href="series-de-tiempo.html#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab=</span> <span class="st">&#39;Tiempo&#39;</span>,</span>
+<span id="cb22-6"><a href="series-de-tiempo.html#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">&#39;Miles de Wats/h&#39;</span>,</span>
+<span id="cb22-7"><a href="series-de-tiempo.html#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">names =</span> month.abb <span class="co"># Agregar nombres puede ser month.abb o month.name o </span></span>
+<span id="cb22-8"><a href="series-de-tiempo.html#cb22-8" aria-hidden="true" tabindex="-1"></a>                          <span class="co">#cualquier vector personalizado</span></span>
+<span id="cb22-9"><a href="series-de-tiempo.html#cb22-9" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div>
+<div class="figure"><span id="fig:boxplotPeriodicidadCONELDO"></span>
+<img src="TimeSeries_files/figure-html/boxplotPeriodicidadCONELDO-1.png" alt="Gráfica de la variación de la serie CONELDO" width="672" />
+<p class="caption">
+Figura 1.5: Gráfica de la variación de la serie CONELDO
+</p>
+</div>
+<p>Lo que realiza la gráfica de boxplot o de caja es reunir todos los valores de un mes determinado y comparar su distribución, el borde inferior de la caja corresponde al primer cuartil de los datos (el punto en el que se acumula el 25% de los datos), la línea horizontal en la parte media corresponde a la mediana (donde se acumula el 50% de las observaciones), y el borde superior de la caja corresponde al tercer cuartil (punto en el que se acumula el 75% de los datos), hay que notar que la diferencia del tercer y primer cuartil corresponde a lo que se conoce como el rango intercuantil denotado como IQR. Las líneas que sobresalen de la caja y al final terminan con una pequeña línea horizontal corresponde a los valores máximos si esta sobre sale de la caja en la parte superior, mientras que la línea inferior corresponde al mínimo. Algunos meses cuentan con pequeños círculos que sobresalen las líneas mencionadas anteriormente, estos puntos son considerados valores atípicos u outliers, ya que son más chicos o más grande que <span class="math inline">\(\mbox{Primer Cuartil } -1.5 \ IQR\)</span> o <span class="math inline">\(\mbox{Tercer Cuartil }-1.5 \ IQR\)</span> respectivamente.</p>
+<p>En la gráfica @ref{fig:boxplotPeriodicidadCONELDO} se observa que la serie tiene una clara variación estacional pues al agrupar cada mes se observa que: enero y febrero tienen un comportamiento similar, en marzo el consumo disminuye alcanzando los valores mínimos, a partir de este mes el consumo empieza a aumentar hasta alcanzar los topes máximos de consumo en el mes de septiembre para posteriormente disminuir paulatinamente hasta diciembre, estos mismos resultados se pueden visualizar en la siguiente gráfica de periodicidad.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="series-de-tiempo.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="series-de-tiempo.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co">#Permite graficar dos gráficas en una ventana</span></span>
+<span id="cb25-2"><a href="series-de-tiempo.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="series-de-tiempo.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggseasonplot</span>(CONELDO.ts,</span>
+<span id="cb25-4"><a href="series-de-tiempo.html#cb25-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">polar=</span><span class="cn">FALSE</span>, </span>
+<span id="cb25-5"><a href="series-de-tiempo.html#cb25-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">main=</span><span class="st">&quot;Periodicidad del consumo de energía eléctrica&quot;</span> )</span></code></pre></div>
+<div class="figure"><span id="fig:plotPeriodicidadCONELDO-1"></span>
+<img src="TimeSeries_files/figure-html/plotPeriodicidadCONELDO-1.png" alt="Gráfica de la variación de la serie CONELDO por año" width="672" />
+<p class="caption">
+Figura 1.6: Gráfica de la variación de la serie CONELDO por año
+</p>
+</div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="series-de-tiempo.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggseasonplot</span>(CONELDO.ts,</span>
+<span id="cb26-2"><a href="series-de-tiempo.html#cb26-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">polar=</span><span class="cn">TRUE</span>,</span>
+<span id="cb26-3"><a href="series-de-tiempo.html#cb26-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">main=</span><span class="st">&quot;Periodicidad del consumo de energía eléctrica (Polar)&quot;</span> )</span></code></pre></div>
+<div class="figure"><span id="fig:plotPeriodicidadCONELDO-2"></span>
+<img src="TimeSeries_files/figure-html/plotPeriodicidadCONELDO-2.png" alt="Gráfica de la variación de la serie CONELDO por año" width="672" />
+<p class="caption">
+Figura 1.7: Gráfica de la variación de la serie CONELDO por año
+</p>
+</div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="series-de-tiempo.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))<span class="co">#Volvemos a iniciar la ventana </span></span></code></pre></div>
+<p>A diferencia de la gráfica de caja donde se analizaban todos los años en conjunto, la función _ ggseasonplot_ contenida en la paquetería <em>forecast</em> y ejecutada en la gráfica @ref{fig: plotPeriodicidadCONELDO} permite detectar año con año los patrones que sigue la serie de tiempo, la gráfica de la izquierda se encuentra en un plano cartesiano, debido a que lo indicamos con la función_ polar = FALSE_, en ella se ve el incremento que ocurre año con año, pero también los patrones en el consumo, mientras que la gráfica de la derecha, al trabajar con una periodicidad anual permite particionar los datos e identificar los patrones más fácilmente, si la serie se comportará igual a lo largo del tiempo el resultado sería una gráfica completamente circular para cada periodo, sin embargo, en el caso particular del consumo de energía en México, se observa que el primer semestre del año hay un consumo menor comparado con la segunda mitad del año.</p>
+</div>
+<div id="consumo-de-energía-eléctrica-doméstica-1" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Consumo de energía eléctrica doméstica</h3>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["TimeSeries.pdf", "TimeSeries.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
