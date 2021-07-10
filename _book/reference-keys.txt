@@ -11,4 +11,4 @@ introducción
 objetivos-del-análisis-de-series-de-tiempo
 ejemplo-de-series-de-tiempo
 consumo-de-energía-eléctrica-doméstica
-consumo-de-energía-eléctrica-doméstica-1
+pasajeris
