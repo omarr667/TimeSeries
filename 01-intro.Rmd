@@ -232,5 +232,5 @@ par(mfrow=c(1,1))#Volvemos a iniciar la ventana
 A diferencia de la gráfica de caja donde se analizaban todos los años en conjunto, la función _ ggseasonplot_ contenida en la paquetería _forecast_ y ejecutada en la gráfica \@ref{fig: plotPeriodicidadCONELDO} permite detectar año con año los patrones que sigue la serie de tiempo, la gráfica de la izquierda se encuentra en un plano cartesiano, debido a que lo indicamos con la función_ polar = FALSE_, en ella se ve el incremento que ocurre año con año, pero también los patrones en el consumo, mientras que la gráfica de la derecha, al trabajar con una periodicidad anual permite particionar los datos e identificar los patrones más fácilmente, si la serie se comportará igual a lo largo del tiempo el resultado sería una gráfica completamente circular para cada periodo,  sin embargo, en el caso particular del consumo de energía en México, se observa que el primer semestre del año hay un consumo menor comparado con la segunda mitad del año.
 
 
-### PASAJERIS
+### Consumo de energía eléctrica doméstica 
 
