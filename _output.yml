@@ -14,4 +14,6 @@ bookdown::pdf_book:
   citation_package: natbib
   keep_tex: yes
   fig_caption: yes
+  always_allow_html: true
 bookdown::epub_book: default
+

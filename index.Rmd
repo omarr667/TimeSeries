@@ -13,6 +13,10 @@ link-citations: yes
 description: Notas sobre el análisis de series de tiempo
 ---
 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+```
 # Prólogo{-}
 
 Estas notas corresponden al curso de Modelos de Supervivencia y de Series de Tiempo contemplados en el [plan de estudio](http://www.fciencias.unam.mx/licenciatura/asignaturas/2017/1739) en la Facultad de Ciencias de la Universidad Nacional Autónoma de México para las licenciaturas de actuaría, matemáticas y matemáticas aplicadas.

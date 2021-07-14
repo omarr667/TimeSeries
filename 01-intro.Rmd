@@ -5,6 +5,13 @@ output:
 ---
 # Series de Tiempo
 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(webshot)
+#webshot::install_phantomjs()
+```
 ## Introducción
 El ser humano desde que es consciente del tiempo se encuentra interesado en predecir eventos futuros y con ello estar preparados para afrontar dichos sucesos; de esta forma los primeros humanos podrían haberse interesados en eventos ambientales como ¿El día de mañana habrá un buen clima? ¿Encontraremos alimento y agua suficiente? etcétera. Las personas con más experiencia, con conocimiento más empírico, podrían tener una noción del clima viendo el cielo, nubes o inclusive las constelaciones para detectar en la temporada en la que se encontraban y así hacer un pronóstico. 
 
@@ -71,14 +78,14 @@ Una vez hecha una predicción, las estimaciones deben pasar por un proceso de ev
 ## Ejemplo de series de tiempo
 A lo largo de este texto se trabajará con diversas bases de datos, las cuales se estará definiendo en cada ejercicio que se realice, sin embargo, la teoría a desarrollar se basará en 3 diferentes series de tiempo, las cuales se mencionarán a continuación:
 
-### Consumo de energía eléctrica doméstica 
+### Consumo de energía eléctrica doméstica  {#coneldo}
 El Instituto Nacional de Estadística y Geografía (INEGI) publica de manera mensual una serie de valores económicos de México, uno de ellos hace referencia al consumo de energía eléctrica doméstica total en miles de millones de watts/hora en el territorio mexicano, por practicidad a esta serie de tiempo se le denominará CONELDO.
 
 Para este trabajó se extrajo de manera mensual, desde la página oficial del INEGI, el consumo de energía eléctrica acumulado en el periodo desde enero 2009 hasta diciembre 2017, dichos resultados serán mostrados por medio del siguiente vector, recuerde que un vector en R, debe iniciar por la letra c, prefijo de concatenate, seguido de paréntesis y dentro de ellos se ingresa cada observación separado por comas.
 
 
 
-```{r}
+```{r }
 
 CONELDO=c(2861,	2833,	2686,	2798,	3123,	3232,	3377,	3545,	3558,	
           3275,	3079,	2792,	2825,	2769,	2655,	2735,	2996,	3282,
@@ -125,7 +132,7 @@ cycle(CONELDO.ts)  #Ciclos de la serie de tiempo
 
 La ventaja de convertir datos en objetos de serie de tiempo es que facilita el trabajo y análisis de muchos de estos modelos pues al indexar en una misma variable, el valor de cada observación, así como el tiempo de ocurrencia, evita la sobrecarga de memoria y declaración de variables. Por ejemplo, siguiendo la idea básica de programación en R, se tendría que manejar una variable de tiempo y otra de datos, así para poder graficar una serie de tiempo podría realizarse el siguiente código:
 
-```{r plotBaseSeries, fig.cap  = 'Gráfica con ggplot usando programación nativa de R'}
+```{r eval=FALSE}
 library(ggplot2) #Librería a ocupar para graficar
 
 ## Se crea una tabla en la cual se tenga los datos y las fechas
@@ -135,27 +142,50 @@ CONELDO.base = data.frame(CONELDO,
                                      by = "month") 
                           )
 ## Se imprime en pantalla los primeros 5 renglones
-head(CONELDO.base)
+head(CONELDO.base, 5)
+
+```
+
+
+```{r echo=FALSE}
+library(ggplot2) #Librería a ocupar para graficar
+
+## Se crea una tabla en la cual se tenga los datos y las fechas
+CONELDO.base = data.frame(CONELDO, 
+                          time = as.Date(seq(ISOdate(2009,01,01), 
+                                     ISOdate(2017,12,01),
+                                     by = "month") )
+                          )
+
+knitr::kable(head(CONELDO.base), caption = 'Consumo de energía eléctrica doméstica en México por mes.') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F, position = "center")
+```
+
+
+```{r plotBaseSeries, fig.align = 'center', fig.cap  = 'Gráfica con ggplot usando programación nativa de R'}
 
 ## Se grafica con ggplot
 ggplot(CONELDO.base, aes(x = time, y = CONELDO))+ #Se inicializa la gráfica
   geom_line(color = 'steelblue') + #Se declara una gráfica de línea
   labs(x = 'Tiempo', y = 'Miles de millones Watts/h', 
         title = 'Serie de Consumo Energía Eléctrica doméstica')
-```
 
+```
 
 La gráfica \@ref(fig:plotBaseSeries)  es adecuada ya que usa una potente herramienta de graficación como lo es _ggplot_, sin embargo, tuvo que crearse 3 diferentes objectos, una base de datos llamada _CONELDO.base_, un vector donde se encuentran los valores de la serie de tiempo _CONELDO _y un vector que recibe el nombre de _time_ el cual contiene una secuencia de fechas. Si se usará el objeto time series (ts) estas declaraciones no serían necesarias pues en este objeto se indexa el tiempo, así en el siguiente código puede observar que el resultado es equivalente al observado en la gráfica \@ref(fig:plotBaseSeries).
 
 
-```{r plotSeriests, fig.cap  = 'Gráfica con plot usando el objeto ts'}
-plot(CONELDO.ts,  xlab= 'Tiempo', ylab = 'Miles de millones Watts/h',
+
+```{r plotSerieCONELDO, fig.cap = 'Gráfica con plot usando el objeto ts', message=FALSE, warning=FALSE, fig.align = 'center', fig.asp = 0.7}
+plot(CONELDO.ts,  xlab= 'Tiempo', 
+     ylab = 'Miles de millones Watts/h',
      main = 'Serie de Consumo Energía Eléctrica doméstica',
      col='steelblue')
-```
-Otra manera de poder graficar los datos a través de R es basándose en la librería _xts_, este paquete incorpora una extensión al objeto _ts_ que viene por defecto en la instalación de R. El beneficio de _xts_ es que se pueden implementar varios tipos de gráficas auxiliares de series de tiempo, dentro del proceso de graficación ayuda a generar gráficas con un mayor control sobre los ejes además de añadir líneas en puntos de interés para ubicar mejor el tiempo y etiquetas más personalizadas. El proceso es similar al obtenido en la figura \@ref{fig:plotSerie}, sin embargo , es necesario convertir el objeto **ts** a uno **xts**, para ello se usará la función _as.xts()_, además sobre la gráfica se añadirá la opción _major.ticks_ para añadir etiquetas en el eje de las $X$ según lo indiquemos, dentro de este parámetro se pueden indicar especificar los siguientes valores, 'auto','minute', 'hours', 'days', 'weeks', 'months', 'quarters', y 'years', pare periodos, automático, minutos, horas, días, semanas, meses, trimestres y años, respectivamente.
 
-```{r plotSeriexts, fig.cap  = 'Gráfica con plot usando el objeto xts', message=FALSE, warning=FALSE}
+```
+Otra manera de poder graficar los datos a través de R es basándose en la librería _xts_, este paquete incorpora una extensión al objeto _ts_ que viene por defecto en la instalación de R. El beneficio de _xts_ es que se pueden implementar varios tipos de gráficas auxiliares de series de tiempo, dentro del proceso de graficación ayuda a generar gráficas con un mayor control sobre los ejes además de añadir líneas en puntos de interés para ubicar mejor el tiempo y etiquetas más personalizadas. El proceso es similar al obtenido en la figura \@ref(fig:plotSerieCONELDO), sin embargo , es necesario convertir el objeto **ts** a uno **xts**, para ello se usará la función _as.xts()_, además sobre la gráfica se añadirá la opción _major.ticks_ para añadir etiquetas en el eje de las $X$ según lo indiquemos, dentro de este parámetro se pueden indicar especificar los siguientes valores, 'auto','minute', 'hours', 'days', 'weeks', 'months', 'quarters', y 'years', pare periodos, automático, minutos, horas, días, semanas, meses, trimestres y años, respectivamente.
+
+```{r plotSeriexts, fig.cap  = 'Gráfica con plot usando el objeto xts', fig.align = 'center', message=FALSE, warning=FALSE}
 library(xts)
 CONELDO.xts = as.xts(CONELDO.ts)
 
@@ -168,13 +198,14 @@ plot(CONELDO.xts, col = 'steelblue',
      
      )
 
+
 ```
 
 Las gráficas que se acaban de realizar son adecuadas, sin embargo, cada una de ellas tiene sus ventajas y desventajas, desde luego no son las únicas formas de graficar series de tiempo en R existen otros paquetes externos dentro de la cual destaca _zoo_. A pesar de ello, a lo largo de este texto se usará de manera indiferente cada uno de los tres métodos mostrados anteriormente, ya que son los más generales y destacan en los siguiente:
 
 * La gráfica con _ggplot2_ (figura \@ref(fig:plotBaseSeries)) es la gráfica más estética de las 3 que se acaban de realizar, sin embargo, aunque es muy personalizable la cantidad de código que hay que considerar es mayor que los otros dos métodos presentados. Además por la manera en que se programa dicha gráfica no admitirá el objeto _ts_, por lo que se tiene que crear una tabla o _data.frame_ en la cual en una columna deberá ser almacenado el valor de la serie de tiempo, y en otra las fechas o tiempos en que ocurrió cada observación. 
-* La gráfica usando el objeto _ts_ y _plot()_ (figura \@ref(fig:plotSeriests)) es la gráfica más sencilla de implementar debido a que el comando _plot()_ acepta el objeto _ts_ y en dicha variable se encuentra indexado el tiempo, sólo será necesario indicar el nombre de las etiquetas y colores de la línea que sigue la serie de tiempo. El resultado es aceptable, sin embargo, estéticamente es la gráfica más sencilla de las presentadas anteriormente- Ya que no se tiene mucho control sobre las etiquetas del eje de las $X$ y $Y$ puede ocasionar que el lector se pierda en el tiempo y sea difícil comparar datos en un intervalo.
-*  La gráfica usando el objeto _xts_ (figura \@ref(fig:plotSeriexts)) es la más equilibrada de todas, el código es más sencillo y un poco menos vistosa que la gráfica \@ref(fig:plotBaseSeries) usando _ggplot_  pero es más atractiva y ligeramente más elaborada que la gráfica \@ref(fig:plotSeriests).  Al incorporar y controlar las líneas verticales en el eje de las $X$ permite que el lector se ubique mejor en el tiempo y pueda comprar resultados. El aspecto negativo es que se tendrá que crear un nuevo objeto del tipo _xts_ lo cual consumirá un pequeño pero existente lugar en la memoria y espacio de trabajo. 
+* La gráfica usando el objeto _ts_ y _plot()_ (figura \@ref(fig:plotSerieCONELDO)) es la gráfica más sencilla de implementar debido a que el comando _plot()_ acepta el objeto _ts_ y en dicha variable se encuentra indexado el tiempo, sólo será necesario indicar el nombre de las etiquetas y colores de la línea que sigue la serie de tiempo. El resultado es aceptable, sin embargo, estéticamente es la gráfica más sencilla de las presentadas anteriormente- Ya que no se tiene mucho control sobre las etiquetas del eje de las $X$ y $Y$ puede ocasionar que el lector se pierda en el tiempo y sea difícil comparar datos en un intervalo.
+*  La gráfica usando el objeto _xts_ (figura \@ref(fig:plotSeriexts)) es la más equilibrada de todas, el código es más sencillo y un poco menos vistosa que la gráfica \@ref(fig:plotBaseSeries) usando _ggplot_  pero es más atractiva y ligeramente más elaborada que la gráfica \@ref(fig:plotSerieCONELDO).  Al incorporar y controlar las líneas verticales en el eje de las $X$ permite que el lector se ubique mejor en el tiempo y pueda comprar resultados. El aspecto negativo es que se tendrá que crear un nuevo objeto del tipo _xts_ lo cual consumirá un pequeño pero existente lugar en la memoria y espacio de trabajo. 
 
 
 Una vez seleccionado la gráfica que más beneficie al lector, la tarea subsecuente será analizar los datos en cuestión, se puede concluir que debido a las gráficas y en el resumen de la información, resultado de la función _summary()_, la serie de tiempo tiene un valor mínimo de $2,655$, máximo de $4,398$ y medio de $3,438$ mil millones Watts/hora, así mismo, en la gráfica de la serie de tiempo los datos presentan características comunes a muchas series económicas. Por ejemplo, es evidente que el **consumo de energía aumenta con el tiempo**, por lo que parece haber una clara **tendencia creciente**. También hay un ciclo evidente en los datos ya que se detecta una periodicidad anual, es decir, hay una clara **variación estacional** en los datos que da como resultado que en un año calendario los datos sean parecidos entre si en el mismo periodo de tiempo, como se puede llegar a apreciar, en todos los años el primer trimestre del año se tiene un consumo bajo de energía, después empieza a aumentar hasta alcanzar máximos locales a mediados de año y de ahí su consumo comienza a disminuir, dicho patrón se repite año con año por lo que se concluye que existe una periodicidad anual en la información.
@@ -188,18 +219,19 @@ La **comprensión de las causas probables** de las características de la serie 
 Una gráfica de serie de tiempo no solo es importante para revelar patrones y características de los datos, sino que también puede revelar valores **atípicos potenciales o valores erróneos**, en inglés nombrados como **outliers**. Por ejemplo, los datos faltantes a veces se codifican con un valor negativo, como 0 o como valores ausentes (NA); obviamente, dichos valores tendrían que tratarse de manera diferente en el análisis, y ciertamente no querrían incluirse como observaciones al ajustar un modelo a los datos, así que habría que realizar técnicas de imputación de los datos para solucionar dichos problemas.
 
 Para obtener una visión más clara de la tendencia, R incorpora funciones que tratan de estimar la tendencia realizando una media móvil centrada de orden relativo a la periodicidad de la información, más adelante se detallará este proceso, pero en este primer acercamiento se usará la función de _aggregate()_ para detectar gráficamente la tendencia sin el efecto de la periodicidad. 
-```{r plotTendenciaCONELDO, fig.cap  = 'Gráfica de la tendencia de la serie CONELDO'}
+
+```{r plotTendenciaCONELDO, fig.align = 'center', fig.cap  = 'Gráfica de la tendencia de la serie CONELDO',  fig.asp = 0.8}
 CONELDO.tendencia = aggregate(CONELDO.ts)
 plot(CONELDO.tendencia, col='steelblue', 
     main='Tendencia del consumo eléctrico',
     xlab= 'Tiempo',
     ylab='Miles de Wats/h')
 ``` 
-Tal y como se observa en la gráfica \@ref{fig:plotTendenciaCONELDO} existe una tendencia positiva, no es una tendencia lineal ya que existen aumentos significativos a lo largo del tiempo, pero a pesar de ello, la se serie nunca decrece en el tiempo en el periodo de observación, lo que refuerza al comentario hecho en los puntos anteriores.
+Tal y como se observa en la gráfica \@ref(fig:plotTendenciaCONELDO) existe una tendencia positiva, no es una tendencia lineal ya que existen aumentos significativos a lo largo del tiempo, pero a pesar de ello, la se serie nunca decrece en el tiempo en el periodo de observación, lo que refuerza al comentario hecho en los puntos anteriores.
 
 De igual manera como sucede en el código anterior se puede poner especial atención a la periodicidad de la serie de tiempo, para ello se usará la función _cycle_ y _boxplot_ para elaborar gráficas de caja para cada mes y observar como es el desempeño de la serie de tiempo en dicha periodicidad. Si existiese una variación estacional entonces los patrones podrían ser fácilmente observado con ayuda del siguiente código.
 
-```{r boxplotPeriodicidadCONELDO, fig.cap  = 'Gráfica de la variación de la serie CONELDO'}
+```{r boxplotPeriodicidadCONELDO, fig.align = 'center', fig.cap  = 'Gráfica de la variación de la serie CONELDO',  fig.asp = 0.8}
 boxplot(CONELDO.ts ~ cycle(CONELDO.ts),
         col = "orange", # Color de relleno
         border = "brown", #Color de contorno
@@ -210,11 +242,11 @@ boxplot(CONELDO.ts ~ cycle(CONELDO.ts),
                           #cualquier vector personalizado
         )
 ```
-Lo que realiza la gráfica de boxplot o de caja es reunir todos los valores de un mes determinado y comparar su distribución, el borde inferior de la caja corresponde al primer cuartil de los datos (el punto en el que se acumula el 25% de los datos), la línea horizontal en la parte media corresponde a la mediana (donde se acumula el 50% de las observaciones), y el borde superior de la caja corresponde al tercer cuartil (punto en el que se acumula el 75% de los datos), hay que notar que la diferencia del tercer y primer cuartil corresponde a lo que se conoce como el rango intercuantil denotado como IQR. Las líneas que sobresalen de la caja y al final terminan con una pequeña línea horizontal corresponde a los valores máximos si esta sobre sale de la caja en la parte superior, mientras que la línea inferior corresponde al mínimo. Algunos meses cuentan con pequeños círculos que sobresalen las líneas mencionadas anteriormente, estos puntos son considerados valores atípicos u outliers, ya que son más chicos o más grande que $\mbox{Primer Cuartil } -1.5 \ IQR$  o $\mbox{Tercer Cuartil }-1.5 \ IQR$ respectivamente. 
+Lo que realiza la gráfica de boxplot o de caja es reunir todos los valores de un mes determinado y comparar su distribución, el borde inferior de la caja corresponde al primer cuartil de los datos (el punto en el que se acumula el 25% de los datos), la línea horizontal en la parte media corresponde a la mediana (donde se acumula el 50% de las observaciones), y el borde superior de la caja corresponde al tercer cuartil (punto en el que se acumula el 75% de los datos), hay que notar que la diferencia del tercer y primer cuartil corresponde a lo que se conoce como el rango intercuantil denotado como IQR. Las líneas que sobresalen de la caja y al final terminan con una pequeña línea horizontal corresponde a los valores máximos si esta sobre sale de la caja en la parte superior, mientras que la línea inferior corresponde al mínimo. Algunos meses cuentan con pequeños círculos que sobresalen las líneas mencionadas anteriormente, estos puntos son considerados valores atípicos u outliers, ya que son más chicos o más grande que $\mbox{Primer Cuartil } -1.5 \ IQR$  o $\mbox{Tercer Cuartil }+1.5 \ IQR$ respectivamente. 
 
-En la gráfica \@ref{fig:boxplotPeriodicidadCONELDO} se observa que la serie tiene una clara variación estacional pues al agrupar cada mes se observa que: enero y febrero tienen un comportamiento similar, en marzo el consumo disminuye alcanzando los valores mínimos, a partir de este mes el consumo empieza a aumentar hasta alcanzar los topes máximos de consumo en el mes de septiembre para posteriormente disminuir paulatinamente hasta diciembre, estos mismos resultados se pueden visualizar en la siguiente gráfica de periodicidad.
+En la gráfica \@ref(fig:boxplotPeriodicidadCONELDO) se observa que la serie tiene una clara variación estacional pues al agrupar cada mes se observa que: enero y febrero tienen un comportamiento similar, en marzo el consumo disminuye alcanzando los valores mínimos, a partir de este mes el consumo empieza a aumentar hasta alcanzar los topes máximos de consumo en el mes de septiembre para posteriormente disminuir paulatinamente hasta diciembre, estos mismos resultados se pueden visualizar en la siguiente gráfica de periodicidad.
 
-```{r plotPeriodicidadCONELDO, fig.cap  = 'Gráfica de la variación de la serie CONELDO por año'}
+```{r plotPeriodicidadCONELDO, fig.align = 'center', fig.cap  = 'Gráfica de la variación de la serie CONELDO por año', warning=FALSE, message=FALSE, fig.show = 'hold', out.width='50%', fig.asp = 0.9}
 library(forecast)
 
 par(mfrow=c(1,2)) #Permite graficar dos gráficas en una ventana
@@ -229,8 +261,310 @@ ggseasonplot(CONELDO.ts,
 
 par(mfrow=c(1,1))#Volvemos a iniciar la ventana 
 ```
-A diferencia de la gráfica de caja donde se analizaban todos los años en conjunto, la función _ ggseasonplot_ contenida en la paquetería _forecast_ y ejecutada en la gráfica \@ref{fig: plotPeriodicidadCONELDO} permite detectar año con año los patrones que sigue la serie de tiempo, la gráfica de la izquierda se encuentra en un plano cartesiano, debido a que lo indicamos con la función_ polar = FALSE_, en ella se ve el incremento que ocurre año con año, pero también los patrones en el consumo, mientras que la gráfica de la derecha, al trabajar con una periodicidad anual permite particionar los datos e identificar los patrones más fácilmente, si la serie se comportará igual a lo largo del tiempo el resultado sería una gráfica completamente circular para cada periodo,  sin embargo, en el caso particular del consumo de energía en México, se observa que el primer semestre del año hay un consumo menor comparado con la segunda mitad del año.
+A diferencia de la gráfica de caja donde se analizaban todos los años en conjunto, la función _ggseasonplot_ contenida en la paquetería _forecast_ y ejecutada en la gráfica \@ref(fig:plotPeriodicidadCONELDO) permite detectar año con año los patrones que sigue la serie de tiempo, la gráfica de la izquierda se encuentra en un plano cartesiano, debido a que lo indicamos con la función _polar = FALSE_, en ella se ve el incremento que ocurre año con año, pero también los patrones en el consumo, mientras que la gráfica de la derecha, al trabajar con una periodicidad anual permite particionar los datos e identificar los patrones más fácilmente, si la serie se comportará igual a lo largo del tiempo el resultado sería una gráfica completamente circular para cada periodo,  sin embargo, en el caso particular del consumo de energía en México, se observa que el primer semestre del año hay un consumo menor comparado con la segunda mitad del año.
 
 
-### Consumo de energía eléctrica doméstica 
+### Variables económicas de Australia
+
+El siguiente ejemplo que se analizará hace referencia a un objeto múltiple de series de tiempo y la importancia de formar este objeto cuando hay varias series referente a un mismo objeto de estudio. La base con la que se trabajará puede consultarse en el siguiente [link]( https://raw.githubusercontent.com/omarr667/TimeSeries/main/Databases/cbe.dat.txt), dicha base de datos contiene una serie de variables económicas de Australia registrado del periodo de enero de 1958 a diciembre de 1990 obtenida de la Australian Bureau of Statistics. La base de datos contiene tres columnas, las primeras de ellas _choc_  y _beer_ que hace referencia a la producción de chocolate y cerveza en toneladas, mientras que _elec_ representa el consumo de energía eléctrica en  millones de KW sobre hora. 
+
+Lo primero que debe realizar es importar de datos en la memoria y espacio de trabajo dentro de R, para ello, se debe de analizar el archivo que contiene los datos, la extensión y con ello elegir el método de importación que mejor se adapte. Debido a que el archivo descargado es del tipo _dat_ y dentro del archivo cada registro se encuentra separado por espacios lo más conveniente será utilizar la función _read.table()_ especificando como primer parámetro la ubicación del archivo y como segundo si la tabla contiene o no encabezados, puede observar los primeros 10 renglones en la tabla \@ref(tab:australia).
+
+
+```{r eval=FALSE}
+
+cbe.base = read.table('Databases/cbe.dat', #Dirección del archivo
+          header=TRUE) #True si en el primer rengón se encuentran los encabezados
+
+```
+
+```{r australia, echo=FALSE}
+
+cbe.base = read.table('Databases/cbe.dat.txt', #Dirección del archivo
+          header=TRUE) #True si en el primer rengón se encuentran los encabezados
+
+
+knitr::kable(head(cbe.base, 10), booktabs = TRUE, caption = 'Variables económicas de Australia de 1958 a diciembre de 1990 ') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F, position = "center")
+```
+
+Siguiendo la estandarización en el análisis de series de tiempo observado en el ejemplo \@ref(coneldo), un punto fundamental es la realización de gráficas para apreciar el contenido de este, para ello se creará gráficas por medio de _ggplot_, _xts_ y con la programación básica de R por medio de _ts_. 
+
+Para realizar gráficas con _ggplot_ será necesario usar una estructura de base de datos siguiendo la estandarización de **tidy**. Una estructura de base de datos **tidy** es importante en R, pues muchos paquetes están construidos para este tipo de estructura, tal es el caso de _ggplot_, para ello, R cuenta con herramientas para facilitar la conversión de tablas de una estructura clásica a una del tipo **tidy**. Una tabla de la forma clásica tiene una estructura similar a la tabla  \@ref(tab:australia), en donde cada columna contiene una variable de interés, y cada renglón a una observación por ejemplo, la producción de chocolate y cerveza en un periodo se muestra en un mismo renglón pero en diferente columna. Sin embargo, una estructura siguiendo la metodología **tidy** lo que propone es que el conjunto de datos sea ordenado siguiendo las siguientes [reglas]( https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html):
+
+* Las cabeceras de las columnas son valores, no nombres de variables.
+* Se almacenan múltiples variables en una columna.
+* Las variables se almacenan tanto en filas como en columnas.
+* Se almacenan múltiples tipos de unidades de observación en la misma tabla.
+* Una misma unidad de observación se almacena en varias tablas.
+
+De esta manera, la tabla de variables económicas siguiendo esta metodología, pasa de un enfoque clásico como \@ref(tab:australia) a uno ordenado bajo **tidy** de la forma \@ref(tab:australiatidy).
+
+
+```{r eval=FALSE}
+library(dplyr) #Libreria de manejo de datos
+library(tidyr) #Libreria auxliar para convertir base a tidy
+
+cbe.base.tidy = cbe.base %>%  #base de donde sacamos información
+  mutate(time =      #Creamos una variable que se llame time
+           as.Date(  #Por defecto es una secuencia del timpo datetime, así que convertimos a Date
+                seq(ISOdate(1958,01,01),  #secuencia, fecha inicial
+                ISOdate(1990,12,01),  #Fecha final 
+                by = "month") # cantidad de incremento
+                )  
+         ) %>% #Pasamos la 'nueva base' a la opción gather para convertir a tidy
+  gather(key='serie',  #Columna a crear donde se almacenan las variables
+         value='Produccion', #columna donde se almacena el valor de la variable 
+         1:3) %>% #Columnas a transponer
+  arrange(time)  # ordenamos los datos por fecha
+head(cbe.base.tidy, 10)
+```
+
+```{r australiatidy, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyr)
+
+cbe.base.tidy = cbe.base %>%
+  mutate(time = 
+           as.Date(
+                seq(ISOdate(1958,01,01), 
+                ISOdate(1990,12,01),
+                by = "month")
+                ) 
+         ) %>%
+  gather(key='serie', value='Produccion', 1:3) %>%
+  arrange(time)
+
+
+
+
+knitr::kable(head(cbe.base.tidy, 10), booktabs = TRUE, caption = 'Variables económicas de Australia de 1958 a diciembre de 1990 ') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F, position = "center")
+```
+
+La tabla \@ref(tab:australiatidy), fue creada utilizando dplyr, y tidyr ya que son librerías muy versátiles para el manejo de datos y sumamente amplias por lo que sólo se comentará las funciones empleadas, el lector que lo desee puede aprender más sobre el tema en la introducción oficial contenida en el siguiente [link]( https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html). Dplyr y tidyr forman parte de una gran serie de paquetes que en conjunto son llamados _tidyverse_.  Dplyr es la raíz de la programación de este tipo de funciones, aunque en primera instancia destaca la cantidad de código que se ha de implementar, este conjunto de funciones está diseñado para permitir la manipulación de datos de una manera intuitiva y fácil de usar, cada función que se invoca debe ser seguida con el operador denominado _pipe_ el cual se denota como $\%>\%$ Las funciones más importantes contenidas en diplyr son las siguientes:
+
+* _select()_, función que recibe como parámetros todas las columnas con las que se realizará un subconjunto de la tabla original, es decir, como dice su nombre selecciona las columnas de base principal.
+* _filter()_, función que recibe una condición dada por el usuario para filtrar la información que cumple dicha condición.
+* _arrange()_, permite ordenar el data.frame bajo la columna o columnas indicadas.
+* _mutate()_, permite la creación de nueva columna, ya sea a través de valores contantes u operaciones entre columnas.
+*_group by()_, permite especificar las columnas que se van a agrupar, para que dentro de esta agrupación se ejecute operación de resumen.
+* _summarize()_, permite resumir la información de una variable respecto a la agrupación hecha en el punto anterior, por ejemplo, puede agruparse los datos por una variable de interés y sobre otra. conocer la suma, conteo, valores máximo o mínimos sobre la variable de agrupación.
+* _gather()_, función dentro de tidyr que permite transponer los datos para transformar de una tabla clásica a una tabla tidyr.
+* _spread()_, función dentro de tidyr, que permite transponer los datos para transformar una tabla tidyr a una clásica. 
+
+
+Quien conozca programación en SQL muchas de las funciones mostradas le serán muy familiares, pues al final este es uno de los objetivos de **dplyr**, heredar la idea lógica de la programación SQL para que esta sea adaptada en R y permitir un manejo de datos adecuado. 
+
+Es importante transformar los datos de una serie con enfoque clásico a uno con enfoque _tidy_, ya que muchos de los análisis o procedimientos precargados en R se basan en tablas con esta estructura.  Adaptar los datos a este formato requiere un trabajo inicial, pero ese trabajo vale la pena a largo plazo, el ejemplo puede observarse en la grafica \@ref(fig:ggplotAustralia) la cual fue generada con el siguiente código:
+
+```{r eval=FALSE}
+ggplot(cbe.base.tidy, aes(x=time, y=Produccion, color=serie)) +
+  geom_line()
+
+```
+```{r ggplotAustralia, fig.align='center', fig.cap='Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia', message=FALSE, warning=FALSE,  screenshot.alt = 'Images/electric_ggplot.png', echo=FALSE}
+library(plotly)
+grafica = ggplot(cbe.base.tidy, aes(x=time, y=Produccion, color=serie)) +
+  geom_line()
+ggplotly(grafica)
+```
+
+Como se aprecia en la figura \@ref(fig:ggplotAustralia), en un mismo diagrama se encuentran graficadas las tres series de tiempo, el problema que se presenta es que aunque se pueden mover los ejes para observar mejor el flujo de la información las cantidades no están en la misma escala es por ello que la producción de cerveza no se puede apreciar de la manera correcta, sin embargo, se puede notar, que aunque no se pueden comprar pues son unidades de medida completamente diferente al menos porcentualmente, la producción de chocolate se ha estancado a diferencia del consumo de energía eléctrica que ha tenido un crecimiento constante. 
+
+Debido a que se tiene la información en un formato **tidy**, el código puede ser modificado rápidamente para poder retratar de mejor manera las series de tiempo. Por el error observado anteriormente, ahora no interesaría graficar las tres series en una misma gráfica si no generar tres gráficas independientes en la que se pueda apreciar el comportamiento tal como se obtiene en la grafica \@ref(fig:ggplotAustralia2). 
+
+
+```{r ggplotAustralia2, fig.align='center', fig.cap='Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia', fig.height=6}
+ggplot(cbe.base.tidy, aes(x=time, y=Produccion, color=serie)) +
+  geom_line()+
+  facet_wrap(~serie,   #Realiza una gráfica por cada serie 
+             scales  = 'free',  #Inidica que las escalas sean libres para cada gráfica
+             ncol=1) #Número de columnas en la gráfica final 
+
+```
+
+Tal como ocurrió en el ejemplo de la sección anterior \@ref(coneldo), la cantidad de código y conceptos que hubo que emplear fue bastante con _ggplot_, sin embargo, el resultado visualmente es excelente, ya que si el lector se encuentra interesado en graficar puede copiar las funciones y sólo cambiar los aspectos estéticos dando resultados a la medida de las necesidades. Aunque _ggplot_ es bueno para reportes posiblemente en la practica necesite resultados más inmediatos y no tan estéticos pues sería una primera fase de análisis. Debido a esta razón puede crear objetos de series de tiempo independientes para posteriormente unirlos en un objeto múltiple. La ventaja de esta labor es que cada comando o función que sea empleada serán aplicadas en todas las series contenidas en este objeto de series de tiempo múltiple. 
+
+Siguiendo entonces esta metodología, lo primero que se deberá de realizar, es convertir cada columna de la base _cbe.base_ a objetos de series de tiempo. Se sabe que cada secuencia de datos fue recopilada de manera mensual de enero de 1958 a diciembre de 1990, así que estas consideraciones deberán ser ingresadas como parámetro en la función _ts()_. Una vez que se tengan las tres series de tiempo creadas, se usará la función _ts.intersect()_ para crear un objeto de serie de tiempo múltiple.
+
+```{r}
+elec.ts = ts(cbe.base$elec, start=1958, freq=12) #Creación de la serie elec
+beer.ts = ts(cbe.base$beer, start=1958, freq=12) #Creación de la serie beer
+choc.ts = ts(cbe.base$choc, start=1958, freq=12) #Creación de la serie choc
+#Se crea el objeto de serie de tiempo multiple
+cbe.ts = ts.intersect(elec.ts, beer.ts, choc.ts)
+
+head(cbe.ts, 10) #se imprimen los primeros 10 renglones
+```
+Crear esta intersección de series de tiempo es muy importante ya que como los datos tienen una misma periodicidad todas las funciones de resumen puede ser empleadas sobre este objeto y no sobre las múltiples series de tiempo, por ejemplo, se puede consultar la clase del objeto que se acaba de crear, dando como  resultado que es una matriz de serie de tiempo (mts), de igual manera, se obtiene el inicio, fin y frecuencia  de la serie de tiempo, y la función _summary_ es capaz de resumir la información para cada serie proporcionando los valores mínimos, cuartiles y media.
+
+```{r}
+class(cbe.ts)#El formato de la serie de tiempo es
+start(cbe.ts)#El incio de la serie de tiempo es
+end(cbe.ts) #Último perido donde se almacena información
+frequency(cbe.ts)#La frecuencia de la serie de tiempo es
+summary(cbe.ts) #Información de la distribución de los datos
+```
+
+Esta construcción también es útil ya que permite la generación de gráficas más sencillas utilizado la programación nativa de R. Al indexar el tiempo, simplemente se ejecuta la opción _plot()_, se añade el objeto de serie de tiempo múltiple y de manera opcional puede modificar algunos aspectos gráficos, dando como resultado la gráfica \@ref(fig:plotAustraliats).
+
+```{r  plotAustraliats, fig.align='center', fig.cap='Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia'}
+plot(cbe.ts, 
+     main= 'Consumo de electricidad, de cerveza y chocolate en Australia',
+     xlab= 'Tiempo',
+     col = 'steelblue')
+
+```
+
+De igual manera, pueden generarse gráficas utilizando el objeto _xts_, recordar que esta clase puede heredar al objeto _ts_ por lo que sólo se tiene que especificar la transformación de dicho objeto con _as.xts()_. Una vez transformada la variable, sólo se hará uso de la función _plot()_, en este caso añadimos ciertos parámetros para hacer la gráfica equivalente a las figuras \@ref(fig:ggplotAustralia2) y \@ref(fig:plotAustraliats), en caso de no añadir los últimos códigos el resultado será equivalente a la figura \@ref(fig:ggplotAustralia2). 
+
+```{r  plotAustraliaxts, fig.align='center', fig.cap='Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia'}
+cbe.xts = as.xts(cbe.ts)
+plot(cbe.xts, 
+     main= 'Consumo de electricidad, de cerveza y chocolate en Australia',
+     xlab= 'Tiempo',
+      multi.panel = 3, # Para generar 3 paneles (de lo contarario el resultado sería a ggplot)
+     yaxis.same = FALSE) #Para que los ejes se adapten a cada serie
+
+```
+Tal como se mencionó en la sección \@ref(coneldo), el lector puede elegir el método que mejor se adapte a sus necesidades, sin embargo, lo más recomendable es usar el objeto _xts_ ya que este tipo de gráficas se encuentran equilibradas, la cantidad de código no es excesiva y visualmente son presentables.
+
+De las gráficas \@ref(fig:ggplotAustralia2),  \@ref(fig:plotAustraliats), \@ref(fig:plotAustraliaxts) puede observarse que las series tienen tendencias muy variadas; la primera, el consumo de electricidad tiene una clara ciclicidad y tendencia positiva que se comporta prácticamente lineal a lo largo del tiempo. Sin embargo, en la producción de chocolate y cerveza se observa una variación estacional que se repite a lo largo del tiempo, sin embargo, su tendencia aunque es positiva hay periodos en los que prácticamente se comporta de manera constante.
+
+
+También se puede ver gráficamente que existe una correlación muy alta entre el consumo de electricidad y la producción de chocolate, es decir, si una aumenta la otra lo hace en una proporción muy parecida, por lo que las series a estimar debería de involucrar una correlación parecida es por ello por lo que las dos gráficas tienen un aspecto similar. Sin embargo, es importante tener en cuenta que esta correlación es engañosa y no puede establecer una causalidad ya que, aunque los dos involucran a aspectos de Australia no hay una clara relación de que el aumentar la producción de chocolate la producción aumente en la misma proporción, a este tipo de correlaciones se llaman relaciones espurias; La correlación existe porque ambos conjuntos de datos tienen una tendencia subyacente y una variación estacional. Cualquier serie que tenga una tendencia tenderá a estar correlacionada con cualquier otra serie que tenga tendencia parecida. Por esta razón, es preferible eliminar las tendencias y los efectos estacionales antes de comparar varias series. 
+
+
+
+```{r  plotcorrelacion, fig.align='center', fig.cap='Correlaciones sobre el consumo de electricidad y producción de cerveza y chocolate en Australia'}
+library(corrplot) #Librería para gráficar correlaciones
+
+cbe.matrix = cor(cbe.ts) #Correlaciones
+corrplot.mixed(cbe.matrix, lower.col="black", upper="color") #gráfica de correlaciones
+```
+         
+
+Para visualizar las tendencias de la serie se usará la función de _aggregate()_ para calcular las medias móviles y detectar gráficamente la tendencia sin el efecto de la periodicidad
+
+```{r  plottendenciamulti, fig.align = 'center', fig.cap  = 'Gráfica de las tendencias de la serie referentes a Australia'}
+cbe.tendencia = aggregate(cbe.ts)
+plot(cbe.tendencia, col='steelblue', 
+    main='Tendencia del consumo eléctrico',
+    xlab= 'Tiempo',
+    ylab='Miles de Wats/h')
+```
+Como se aprecia, el consumo de electricidad tiene una clara tendencia al alta, mientras que la producción de cerveza a pesar de que tenía un crecimiento constante de 1950 a 1974,  desde 1975, la tendencia se mantiene constante con pequeñas subidas y bajadas en el tiempo. Por último, la producción de chocolate tiene una tendencia al alta, sin embargo, a lo largo del tiempo ha presentado incrementos y decrementos constantes en todo el intervalo de observación.
+
+
+Para la ciclicidad, no existe una función que se pueda emplear sobre este objeto múltiple, así que se realizará la función _ggseasonplot()_  para consultar la variación estacional
+
+```{r plotPeriodicidadcbe, fig.align = 'center', fig.cap  = 'Gráfica de la variación de la serie CBE',  fig.show = 'hold', out.width='33%',  fig.asp = 0.8}
+
+par(mfrow=c(1,3)) #Permite graficar dos gráficas en una ventana
+
+
+ggseasonplot(elec.ts,
+             polar=TRUE, 
+             main="Periodicidad del consumo de energía eléctrica" )
+ggseasonplot(beer.ts,
+             polar=TRUE, 
+             main="Periodicidad del consumo de la producción de cerveza" )
+ggseasonplot(choc.ts,
+             polar=TRUE, 
+             main="Periodicidad del consumo de la producción de chocolate" )
+
+
+par(mfrow=c(1,1))
+```
+Se decidió hacer la gráfica \@ref(fig:plotPeriodicidadcbe) de manera polar, pues debido a la gran cantidad de años que se analizan el resultado no sería claramente visualizado. En dicha figura, se observa que la primera gráfica hace referencia a la variación estacional del consumo eléctrico, en ella se aprecia que el consumo se comporta de manera lineal a lo largo del año, aunque existe un mayor consumo en los meses de junio a agosto mientras que en abril hay un menor consumo. La segunda gráfica hace referencia a la producción de cerveza, el comportamiento es más variado año tras año, pero se puede apreciar que en enero y febrero sucede que la producción es muy baja, después empieza a aumentar paulatinamente hasta diciembre, mes en el cual se encuentra la mayor producción del año. Mientras que la producción de chocolate, la ciclicidad es fácil de observar, en enero la producción es muy baja posteriormente empieza a aumentar hasta agosto y octubre donde se realiza la mayor producción después de estas fechas la producción empieza a caer para el resto del año.
+
+
+### Pasajeros aéreos
+
+Otra de la serie de tiempo que se estará analizando será **Air Passengers**, esta es posiblemente una de las series más utilizadas ya que se presenta a detalle en el texto Box & Jenkins (1976) ,  uno de los libros pioneros en el análisis estadístico de las series de tiempo, aunque la recopilación de los datos y análisis corresponde a Brown (1962).
+
+La base **Air Passengers** hace referencia al número de personas (en miles) que viajan mensualmente en una cierta aerolínea internacional de pasajeros durante el periodo de enero de 1949 a diciembre de 1960.  
+
+Debido a la gran importancia histórica y que es de gran utilidad para ilustrar  los conceptos de la exploración de los datos de series de tiempo, esta base se encuentra precargada en R, sólo será necesario invocarla con el comando para poder utilizarla, _AirPassengers_.
+
+```{r}
+AP.ts = AirPassengers
+AP.ts
+```
+
+Como se aprecia, el resultado tiene un comportamiento parecido a un objeto _ts_ ya que la información se encuentra indexada y acomodado en el formato típico. Así que se comprobará esta suposición.
+
+```{r}
+class(AP.ts)#El formato de la serie de tiempo es
+start(AP.ts)#El incio de la serie de tiempo es
+end(AP.ts)#El fin de la serie de tiempo es
+frequency(AP.ts)#La frecuencia de la serie de tiempo es
+summary(AP.ts) #Información de la distribución de los datos
+```
+
+Debido a la función _class()_ se conoce que efectivamente _AirPassengers_ al ser una base precargada tiene este procesamiento por lo que no es necesario volver a definir los datos como objeto _ts_. De igual manera se observa que los datos tienen una periodicidad mensual en el cual el primer dato es registrado en enero de 1949 y el último en diciembre de 1960. El valor de miles de personas que viajan en esa Aerolínea es 104, las personas medias 265.5 y el valor máximo que se tuvo registro fue 622 mil pasajeros interesados en viajar con esta aerolínea.
+
+Ya que los datos se encuentran previamente creados, sólo se realizarán las gráficas basadas en _ts_ y el objeto _xts_ los cuales puedes consultarse en la gráfica \@ref(fig:plotAP), al estar ya creado este objeto facilita mucho el análisis y la generación de los diagramas mostrados. 
+
+
+```{r plotAP, fig.align = 'center', fig.cap  = 'Gráfica de frecuencia de pasajeros de una aerolínea.',  fig.show = 'hold', out.width='100%',  fig.asp = 0.8}
+
+par(mfrow=c(2,1))
+
+plot(AP.ts,  xlab= 'Tiempo', 
+     ylab = 'Miles de pasajeros',
+     main = 'Frecuencia de pasajeros de una aerolínea',
+     col='steelblue')
+
+AP.xts = as.xts(AP.ts)
+plot(AP.xts,
+      xlab= 'Tiempo', 
+     ylab = 'Miles de pasajeros',
+      col = 'steelblue', 
+     grid.ticks.on = 'quarters', #Crea líneas verticales sobre la gráfica cada trimestre
+     major.ticks = 'quarters',  #Crea líneas verticales sobre la gráfica cada trimestre
+     minor.ticks ='years', # Escribe la etiqueta de los meses cada cierto tiempo
+     grid.col = 'lightgrey', #color líneas verticales
+     main='Frecuencia de pasajeros de una aerolínea'
+     
+     )
+
+
+
+par(mfrow=c(1,1))
+```
+
+En la gráfica \@ref(fig:plotAP) se puede notar que la gráfica superior corresponde a la representación por medio del objeto _ts_, mientras que la inferior al objeto _xts_. Ambas gráficas muestran la misma información, sin embargo, debido a la construcción del _xts_ permite un mayor control y ubicación en el tiempo pues presenta líneas auxiliares dentro de la misma gráfica. 
+
+De manera general se puede concluir que la cantidad de pasajeros de esta aerolínea tiene una tendencia positiva pues conforme pasa el tiempo una mayor cantidad de personas están realizando un viaje en esta aerolínea, de igual manera, existe un ciclo o periodicidad anual en el cual cada año se puede percibir una clara variación estacional en el cual a inicios de año la cantidad de vuelos es menor pero aumentando paulatinamente hasta la temporada vacacional de verano donde se alcanzan los máximos por año y de ahí empieza a disminuir para el resto del año. Se aprecia que conforme aumenta el tiempo más variabilidad existen en los datos, pues al comienzo la varianza de los datos visualmente es menor y en tiempos posteriores la varianza aumenta creando ciclos cada vez más pronunciados. Estos comentarios son respaldados con las gráficas contenidas en la figura \@ref(fig:clipeAP).
+
+
+```{r clipeAP, fig.align = 'center', fig.cap  = 'Periodicidad y tendencia de pasajeros de una aerolínea.',  fig.show = 'hold', out.width='100%',  fig.asp = 0.8, fig.width=8}
+
+par(mfrow=c(2,1))
+## Tendencia
+AP.tendencia = aggregate(AP.ts)
+
+plot(AP.tendencia, col='steelblue', 
+    main='Tendencia de la cantidad de pasajeros',
+    xlab= 'Tiempo',
+    ylab='Miles pasajeros')
+
+# Periodicidad
+boxplot(AP.ts ~ cycle(AP.ts),
+        col = "orange", # Color de relleno
+        border = "brown", #Color de contorno
+        main='Peridicidad de la cantidad de pasajeros',
+        xlab= 'Tiempo',
+        ylab='Miles pasajeros',
+        names = month.abb # Agregar nombres puede ser month.abb o month.name o 
+                          #cualquier vector personalizado
+        )
+
+par(mfrow=c(1,1))
+```
+
+Como se aprecia en la figura \@ref(fig:clipeAP) se refuerzan los comentarios anteriores, existe un aumento progresivo a lo largo del tiempo de manera creciente lineal por lo que se dice que sigue una tendencia. Se observa una periodicidad en forma de campana en el cual la mayor cantidad de viajes ocurre en julio y agosto, después de estas fechas existe un decrecimiento en la cantidad de vuelos. 
+Es importante tratar de describir el motivo de estos cambios, pues de esta manera, las estimaciones y resultados pueden evaluarse para decidir si se apegan o no a los datos. Así el aumento de la demanda de viajes aéreos puede debido a precios más competitivos, mayor disponibilidad de aviones o la apertura comercial que se ha vivido en últimas fechas, así como tratados internacionales han permitido que acceder a otros países sea más sencillo y las personas se encuentren más motivados a realizar estos viajes; la demanda en determinadas épocas del año corresponde a los periodos vacacionales, lo que podría explicar la variación estacional. Por otra parte, el aumento de la población podría explicar la tendencia al aumento constante.
 
