@@ -212,6 +212,20 @@
 
 \parskip=0.4cm
 \parindent=3mm
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \ifXeTeX
   % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
   \usepackage{polyglossia}
@@ -230,7 +244,7 @@
 
 \title{Series de Tiempo}
 \author{Omar Rodríguez Torres (\href{mailto:omarr667@ciencias.unam.mx}{\nolinkurl{omarr667@ciencias.unam.mx}})}
-\date{2021-07-07}
+\date{2021-07-14}
 
 \begin{document}
 \maketitle
@@ -337,8 +351,8 @@ Una vez hecha una predicción, las estimaciones deben pasar por un proceso de ev
 
 A lo largo de este texto se trabajará con diversas bases de datos, las cuales se estará definiendo en cada ejercicio que se realice, sin embargo, la teoría a desarrollar se basará en 3 diferentes series de tiempo, las cuales se mencionarán a continuación:
 
-\hypertarget{consumo-de-energuxeda-eluxe9ctrica-domuxe9stica}{%
-\subsection{Consumo de energía eléctrica doméstica}\label{consumo-de-energuxeda-eluxe9ctrica-domuxe9stica}}
+\hypertarget{coneldo}{%
+\subsection{Consumo de energía eléctrica doméstica}\label{coneldo}}
 
 El Instituto Nacional de Estadística y Geografía (INEGI) publica de manera mensual una serie de valores económicos de México, uno de ellos hace referencia al consumo de energía eléctrica doméstica total en miles de millones de watts/hora en el territorio mexicano, por practicidad a esta serie de tiempo se le denominará CONELDO.
 
@@ -478,19 +492,32 @@ La ventaja de convertir datos en objetos de serie de tiempo es que facilita el t
                                      \AttributeTok{by =} \StringTok{"month"}\NormalTok{) }
 \NormalTok{                          )}
 \DocumentationTok{\#\# Se imprime en pantalla los primeros 5 renglones}
-\FunctionTok{head}\NormalTok{(CONELDO.base)}
+\FunctionTok{head}\NormalTok{(CONELDO.base, }\DecValTok{5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-##   CONELDO                time
-## 1    2861 2009-01-01 12:00:00
-## 2    2833 2009-02-01 12:00:00
-## 3    2686 2009-03-01 12:00:00
-## 4    2798 2009-04-01 12:00:00
-## 5    3123 2009-05-01 12:00:00
-## 6    3232 2009-06-01 12:00:00
-\end{verbatim}
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-9}Consumo de energía eléctrica doméstica en México por mes.}
+\centering
+\begin{tabular}[t]{r|l}
+\hline
+CONELDO & time\\
+\hline
+2861 & 2009-01-01\\
+\hline
+2833 & 2009-02-01\\
+\hline
+2686 & 2009-03-01\\
+\hline
+2798 & 2009-04-01\\
+\hline
+3123 & 2009-05-01\\
+\hline
+3232 & 2009-06-01\\
+\hline
+\end{tabular}
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -503,23 +530,35 @@ La ventaja de convertir datos en objetos de serie de tiempo es que facilita el t
 \end{Shaded}
 
 \begin{figure}
-\centering
-\includegraphics{TimeSeries_files/figure-latex/plotBaseSeries-1.pdf}
-\caption{\label{fig:plotBaseSeries}Gráfica con ggplot usando programación nativa de R}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotBaseSeries-1} 
+
+}
+
+\caption{Gráfica con ggplot usando programación nativa de R}\label{fig:plotBaseSeries}
 \end{figure}
 
 La gráfica \ref{fig:plotBaseSeries} es adecuada ya que usa una potente herramienta de graficación como lo es \emph{ggplot}, sin embargo, tuvo que crearse 3 diferentes objectos, una base de datos llamada \emph{CONELDO.base}, un vector donde se encuentran los valores de la serie de tiempo \_CONELDO \_y un vector que recibe el nombre de \emph{time} el cual contiene una secuencia de fechas. Si se usará el objeto time series (ts) estas declaraciones no serían necesarias pues en este objeto se indexa el tiempo, así en el siguiente código puede observar que el resultado es equivalente al observado en la gráfica \ref{fig:plotBaseSeries}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(CONELDO.ts,  }\AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Miles de millones Watts/h\textquotesingle{}}\NormalTok{,}
+\FunctionTok{plot}\NormalTok{(CONELDO.ts,  }\AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{, }
+     \AttributeTok{ylab =} \StringTok{\textquotesingle{}Miles de millones Watts/h\textquotesingle{}}\NormalTok{,}
      \AttributeTok{main =} \StringTok{\textquotesingle{}Serie de Consumo Energía Eléctrica doméstica\textquotesingle{}}\NormalTok{,}
      \AttributeTok{col=}\StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{TimeSeries_files/figure-latex/plotSerie-1.pdf}
-Otra manera de poder graficar los datos a través de R es basándose en la librería \emph{xts}, este paquete incorpora una extensión al objeto \emph{ts} que viene por defecto en la instalación de R. El beneficio de \emph{xts} es que se pueden implementar varios tipos de gráficas auxiliares de series de tiempo, dentro del proceso de graficación ayuda a generar gráficas con un mayor control sobre los ejes además de añadir líneas en puntos de interés para ubicar mejor el tiempo y etiquetas más personalizadas. El proceso es similar al obtenido en la figura @ref\{fig:plotSerie\}, sin embargo , es necesario convertir el objeto \textbf{ts} a uno \textbf{xts}, para ello se usará la función \emph{as.xts()}, además sobre la gráfica se añadirá la opción \emph{major.ticks} para añadir etiquetas en el eje de las \(X\) según lo indiquemos, dentro de este parámetro se pueden indicar especificar los siguientes valores, `auto',`minute', `hours', `days', `weeks', `months', `quarters', y `years', pare periodos, automático, minutos, horas, días, semanas, meses, trimestres y años, respectivamente.
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotSerieCONELDO-1} 
+
+}
+
+\caption{Gráfica con plot usando el objeto ts}\label{fig:plotSerieCONELDO}
+\end{figure}
+
+Otra manera de poder graficar los datos a través de R es basándose en la librería \emph{xts}, este paquete incorpora una extensión al objeto \emph{ts} que viene por defecto en la instalación de R. El beneficio de \emph{xts} es que se pueden implementar varios tipos de gráficas auxiliares de series de tiempo, dentro del proceso de graficación ayuda a generar gráficas con un mayor control sobre los ejes además de añadir líneas en puntos de interés para ubicar mejor el tiempo y etiquetas más personalizadas. El proceso es similar al obtenido en la figura \ref{fig:plotSerieCONELDO}, sin embargo , es necesario convertir el objeto \textbf{ts} a uno \textbf{xts}, para ello se usará la función \emph{as.xts()}, además sobre la gráfica se añadirá la opción \emph{major.ticks} para añadir etiquetas en el eje de las \(X\) según lo indiquemos, dentro de este parámetro se pueden indicar especificar los siguientes valores, `auto',`minute', `hours', `days', `weeks', `months', `quarters', y `years', pare periodos, automático, minutos, horas, días, semanas, meses, trimestres y años, respectivamente.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -538,9 +577,12 @@ Otra manera de poder graficar los datos a través de R es basándose en la libre
 \end{Shaded}
 
 \begin{figure}
-\centering
-\includegraphics{TimeSeries_files/figure-latex/plotSeriexts-1.pdf}
-\caption{\label{fig:plotSeriexts}Gráfica con plot usando el objeto xts}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotSeriexts-1} 
+
+}
+
+\caption{Gráfica con plot usando el objeto xts}\label{fig:plotSeriexts}
 \end{figure}
 
 Las gráficas que se acaban de realizar son adecuadas, sin embargo, cada una de ellas tiene sus ventajas y desventajas, desde luego no son las únicas formas de graficar series de tiempo en R existen otros paquetes externos dentro de la cual destaca \emph{zoo}. A pesar de ello, a lo largo de este texto se usará de manera indiferente cada uno de los tres métodos mostrados anteriormente, ya que son los más generales y destacan en los siguiente:
@@ -550,10 +592,657 @@ Las gráficas que se acaban de realizar son adecuadas, sin embargo, cada una de 
 \item
   La gráfica con \emph{ggplot2} (figura \ref{fig:plotBaseSeries}) es la gráfica más estética de las 3 que se acaban de realizar, sin embargo, aunque es muy personalizable la cantidad de código que hay que considerar es mayor que los otros dos métodos presentados. Además por la manera en que se programa dicha gráfica no admitirá el objeto \emph{ts}, por lo que se tiene que crear una tabla o \emph{data.frame} en la cual en una columna deberá ser almacenado el valor de la serie de tiempo, y en otra las fechas o tiempos en que ocurrió cada observación.
 \item
-  La gráfica usando el objeto \emph{ts} y \emph{plot()} (figura \ref{fig:plotSerie}) es la gráfica más sencilla de implementar debido a que el comando \emph{plot()} acepta el objeto \emph{ts} y en dicha variable se encuentra indexado el tiempo, sólo será necesario indicar el nombre de las etiquetas y colores de la línea que sigue la serie de tiempo. El resultado es aceptable, sin embargo, estéticamente es la gráfica más sencilla de las presentadas anteriormente- Ya que no se tiene mucho control sobre las etiquetas del eje de las \(X\) y \(Y\) puede ocasionar que el lector se pierda en el tiempo y sea difícil comparar datos en un intervalo.
+  La gráfica usando el objeto \emph{ts} y \emph{plot()} (figura \ref{fig:plotSerieCONELDO}) es la gráfica más sencilla de implementar debido a que el comando \emph{plot()} acepta el objeto \emph{ts} y en dicha variable se encuentra indexado el tiempo, sólo será necesario indicar el nombre de las etiquetas y colores de la línea que sigue la serie de tiempo. El resultado es aceptable, sin embargo, estéticamente es la gráfica más sencilla de las presentadas anteriormente- Ya que no se tiene mucho control sobre las etiquetas del eje de las \(X\) y \(Y\) puede ocasionar que el lector se pierda en el tiempo y sea difícil comparar datos en un intervalo.
 \item
-  La gráfica usando el objeto \emph{xts} (figura \ref{fig:plotSeriexts}) es la más equilibrada de todas, el código es más sencillo y un poco menos vistosa que la gráfica \ref{fig:plotBaseSeries} usando \emph{ggplot} pero es más atractiva y ligeramente más elaborada que la gráfica \ref{fig:plotSerie}. Al incorporar y controlar las líneas verticales en el eje de las \(X\) permite que el lector se ubique mejor en el tiempo y pueda comprar resultados. El aspecto negativo es que se tendrá que crear un nuevo objeto del tipo \emph{xts} lo cual consumirá un pequeño pero existente lugar en la memoria y espacio de trabajo.
+  La gráfica usando el objeto \emph{xts} (figura \ref{fig:plotSeriexts}) es la más equilibrada de todas, el código es más sencillo y un poco menos vistosa que la gráfica \ref{fig:plotBaseSeries} usando \emph{ggplot} pero es más atractiva y ligeramente más elaborada que la gráfica \ref{fig:plotSerieCONELDO}. Al incorporar y controlar las líneas verticales en el eje de las \(X\) permite que el lector se ubique mejor en el tiempo y pueda comprar resultados. El aspecto negativo es que se tendrá que crear un nuevo objeto del tipo \emph{xts} lo cual consumirá un pequeño pero existente lugar en la memoria y espacio de trabajo.
 \end{itemize}
+
+Una vez seleccionado la gráfica que más beneficie al lector, la tarea subsecuente será analizar los datos en cuestión, se puede concluir que debido a las gráficas y en el resumen de la información, resultado de la función \emph{summary()}, la serie de tiempo tiene un valor mínimo de \(2,655\), máximo de \(4,398\) y medio de \(3,438\) mil millones Watts/hora, así mismo, en la gráfica de la serie de tiempo los datos presentan características comunes a muchas series económicas. Por ejemplo, es evidente que el \textbf{consumo de energía aumenta con el tiempo}, por lo que parece haber una clara \textbf{tendencia creciente}. También hay un ciclo evidente en los datos ya que se detecta una periodicidad anual, es decir, hay una clara \textbf{variación estacional} en los datos que da como resultado que en un año calendario los datos sean parecidos entre si en el mismo periodo de tiempo, como se puede llegar a apreciar, en todos los años el primer trimestre del año se tiene un consumo bajo de energía, después empieza a aumentar hasta alcanzar máximos locales a mediados de año y de ahí su consumo comienza a disminuir, dicho patrón se repite año con año por lo que se concluye que existe una periodicidad anual en la información.
+
+La \textbf{comprensión de las causas probables} de las características de la serie puede formar una guía útil en el diseño y creación de un \textbf{modelo de serie de tiempo apropiado}. Para el caso particular de la serie CONELDO, las posibles causas que pueden incluir son:
+* El aumento de la demanda de energía tiene una tendencia al alta pues el avance tecnológico y herramientas cada vez más sofisticadas hacen que el consumo eléctrico sea cada vez mayor.
+
+\begin{itemize}
+\tightlist
+\item
+  De igual forma, la tendencia al alta se puede deber a que existe en el país un crecimiento poblacional evidente y una mayor facilidad de adquisición de productos eléctricos.
+\item
+  El aumento de la demanda en ciertas épocas del año podría causarse debido a los períodos vacacionales, en específico a las de verano, ya que la serie al enfocarse al consumo eléctrico domestico esta temporada es cuando las personas pasan más tiempo en casa haciendo así que el consumo aumente.
+\end{itemize}
+
+Una gráfica de serie de tiempo no solo es importante para revelar patrones y características de los datos, sino que también puede revelar valores \textbf{atípicos potenciales o valores erróneos}, en inglés nombrados como \textbf{outliers}. Por ejemplo, los datos faltantes a veces se codifican con un valor negativo, como 0 o como valores ausentes (NA); obviamente, dichos valores tendrían que tratarse de manera diferente en el análisis, y ciertamente no querrían incluirse como observaciones al ajustar un modelo a los datos, así que habría que realizar técnicas de imputación de los datos para solucionar dichos problemas.
+
+Para obtener una visión más clara de la tendencia, R incorpora funciones que tratan de estimar la tendencia realizando una media móvil centrada de orden relativo a la periodicidad de la información, más adelante se detallará este proceso, pero en este primer acercamiento se usará la función de \emph{aggregate()} para detectar gráficamente la tendencia sin el efecto de la periodicidad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CONELDO.tendencia }\OtherTok{=} \FunctionTok{aggregate}\NormalTok{(CONELDO.ts)}
+\FunctionTok{plot}\NormalTok{(CONELDO.tendencia, }\AttributeTok{col=}\StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{, }
+    \AttributeTok{main=}\StringTok{\textquotesingle{}Tendencia del consumo eléctrico\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{ylab=}\StringTok{\textquotesingle{}Miles de Wats/h\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotTendenciaCONELDO-1} 
+
+}
+
+\caption{Gráfica de la tendencia de la serie CONELDO}\label{fig:plotTendenciaCONELDO}
+\end{figure}
+
+Tal y como se observa en la gráfica \ref{fig:plotTendenciaCONELDO} existe una tendencia positiva, no es una tendencia lineal ya que existen aumentos significativos a lo largo del tiempo, pero a pesar de ello, la se serie nunca decrece en el tiempo en el periodo de observación, lo que refuerza al comentario hecho en los puntos anteriores.
+
+De igual manera como sucede en el código anterior se puede poner especial atención a la periodicidad de la serie de tiempo, para ello se usará la función \emph{cycle} y \emph{boxplot} para elaborar gráficas de caja para cada mes y observar como es el desempeño de la serie de tiempo en dicha periodicidad. Si existiese una variación estacional entonces los patrones podrían ser fácilmente observado con ayuda del siguiente código.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(CONELDO.ts }\SpecialCharTok{\textasciitilde{}} \FunctionTok{cycle}\NormalTok{(CONELDO.ts),}
+        \AttributeTok{col =} \StringTok{"orange"}\NormalTok{, }\CommentTok{\# Color de relleno}
+        \AttributeTok{border =} \StringTok{"brown"}\NormalTok{, }\CommentTok{\#Color de contorno}
+        \AttributeTok{main=}\StringTok{\textquotesingle{}Consumo eléctrico doméstico\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{ylab=}\StringTok{\textquotesingle{}Miles de Wats/h\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{names =}\NormalTok{ month.abb }\CommentTok{\# Agregar nombres puede ser month.abb o month.name o }
+                          \CommentTok{\#cualquier vector personalizado}
+\NormalTok{        )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/boxplotPeriodicidadCONELDO-1} 
+
+}
+
+\caption{Gráfica de la variación de la serie CONELDO}\label{fig:boxplotPeriodicidadCONELDO}
+\end{figure}
+
+Lo que realiza la gráfica de boxplot o de caja es reunir todos los valores de un mes determinado y comparar su distribución, el borde inferior de la caja corresponde al primer cuartil de los datos (el punto en el que se acumula el 25\% de los datos), la línea horizontal en la parte media corresponde a la mediana (donde se acumula el 50\% de las observaciones), y el borde superior de la caja corresponde al tercer cuartil (punto en el que se acumula el 75\% de los datos), hay que notar que la diferencia del tercer y primer cuartil corresponde a lo que se conoce como el rango intercuantil denotado como IQR. Las líneas que sobresalen de la caja y al final terminan con una pequeña línea horizontal corresponde a los valores máximos si esta sobre sale de la caja en la parte superior, mientras que la línea inferior corresponde al mínimo. Algunos meses cuentan con pequeños círculos que sobresalen las líneas mencionadas anteriormente, estos puntos son considerados valores atípicos u outliers, ya que son más chicos o más grande que \(\mbox{Primer Cuartil } -1.5 \ IQR\) o \(\mbox{Tercer Cuartil }+1.5 \ IQR\) respectivamente.
+
+En la gráfica \ref{fig:boxplotPeriodicidadCONELDO} se observa que la serie tiene una clara variación estacional pues al agrupar cada mes se observa que: enero y febrero tienen un comportamiento similar, en marzo el consumo disminuye alcanzando los valores mínimos, a partir de este mes el consumo empieza a aumentar hasta alcanzar los topes máximos de consumo en el mes de septiembre para posteriormente disminuir paulatinamente hasta diciembre, estos mismos resultados se pueden visualizar en la siguiente gráfica de periodicidad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(forecast)}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{)) }\CommentTok{\#Permite graficar dos gráficas en una ventana}
+
+\FunctionTok{ggseasonplot}\NormalTok{(CONELDO.ts,}
+             \AttributeTok{polar=}\ConstantTok{FALSE}\NormalTok{, }
+             \AttributeTok{main=}\StringTok{"Periodicidad del consumo de energía eléctrica"}\NormalTok{ )}
+
+\FunctionTok{ggseasonplot}\NormalTok{(CONELDO.ts,}
+             \AttributeTok{polar=}\ConstantTok{TRUE}\NormalTok{,}
+             \AttributeTok{main=}\StringTok{"Periodicidad del consumo de energía eléctrica (Polar)"}\NormalTok{ )}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}\CommentTok{\#Volvemos a iniciar la ventana }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{TimeSeries_files/figure-latex/plotPeriodicidadCONELDO-1} \includegraphics[width=0.5\linewidth]{TimeSeries_files/figure-latex/plotPeriodicidadCONELDO-2} 
+
+}
+
+\caption{Gráfica de la variación de la serie CONELDO por año}\label{fig:plotPeriodicidadCONELDO}
+\end{figure}
+
+A diferencia de la gráfica de caja donde se analizaban todos los años en conjunto, la función \emph{ggseasonplot} contenida en la paquetería \emph{forecast} y ejecutada en la gráfica \ref{fig:plotPeriodicidadCONELDO} permite detectar año con año los patrones que sigue la serie de tiempo, la gráfica de la izquierda se encuentra en un plano cartesiano, debido a que lo indicamos con la función \emph{polar = FALSE}, en ella se ve el incremento que ocurre año con año, pero también los patrones en el consumo, mientras que la gráfica de la derecha, al trabajar con una periodicidad anual permite particionar los datos e identificar los patrones más fácilmente, si la serie se comportará igual a lo largo del tiempo el resultado sería una gráfica completamente circular para cada periodo, sin embargo, en el caso particular del consumo de energía en México, se observa que el primer semestre del año hay un consumo menor comparado con la segunda mitad del año.
+
+\hypertarget{variables-econuxf3micas-de-australia}{%
+\subsection{Variables económicas de Australia}\label{variables-econuxf3micas-de-australia}}
+
+El siguiente ejemplo que se analizará hace referencia a un objeto múltiple de series de tiempo y la importancia de formar este objeto cuando hay varias series referente a un mismo objeto de estudio. La base con la que se trabajará puede consultarse en el siguiente \href{https://raw.githubusercontent.com/omarr667/TimeSeries/main/Databases/cbe.dat.txt}{link}, dicha base de datos contiene una serie de variables económicas de Australia registrado del periodo de enero de 1958 a diciembre de 1990 obtenida de la Australian Bureau of Statistics. La base de datos contiene tres columnas, las primeras de ellas \emph{choc} y \emph{beer} que hace referencia a la producción de chocolate y cerveza en toneladas, mientras que \emph{elec} representa el consumo de energía eléctrica en millones de KW sobre hora.
+
+Lo primero que debe realizar es importar de datos en la memoria y espacio de trabajo dentro de R, para ello, se debe de analizar el archivo que contiene los datos, la extensión y con ello elegir el método de importación que mejor se adapte. Debido a que el archivo descargado es del tipo \emph{dat} y dentro del archivo cada registro se encuentra separado por espacios lo más conveniente será utilizar la función \emph{read.table()} especificando como primer parámetro la ubicación del archivo y como segundo si la tabla contiene o no encabezados, puede observar los primeros 10 renglones en la tabla \ref{tab:australia}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbe.base }\OtherTok{=} \FunctionTok{read.table}\NormalTok{(}\StringTok{\textquotesingle{}Databases/cbe.dat\textquotesingle{}}\NormalTok{, }\CommentTok{\#Dirección del archivo}
+          \AttributeTok{header=}\ConstantTok{TRUE}\NormalTok{) }\CommentTok{\#True si en el primer rengón se encuentran los encabezados}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:australia}Variables económicas de Australia de 1958 a diciembre de 1990 }
+\centering
+\begin{tabular}[t]{rrr}
+\toprule
+choc & beer & elec\\
+\midrule
+1451 & 96.3 & 1497\\
+2037 & 84.4 & 1463\\
+2477 & 91.2 & 1648\\
+2785 & 81.9 & 1595\\
+2994 & 80.5 & 1777\\
+\addlinespace
+2681 & 70.4 & 1824\\
+3098 & 74.8 & 1994\\
+2708 & 75.9 & 1835\\
+2517 & 86.3 & 1787\\
+2445 & 98.7 & 1699\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Siguiendo la estandarización en el análisis de series de tiempo observado en el ejemplo \ref{coneldo}, un punto fundamental es la realización de gráficas para apreciar el contenido de este, para ello se creará gráficas por medio de \emph{ggplot}, \emph{xts} y con la programación básica de R por medio de \emph{ts}.
+
+Para realizar gráficas con \emph{ggplot} será necesario usar una estructura de base de datos siguiendo la estandarización de \textbf{tidy}. Una estructura de base de datos \textbf{tidy} es importante en R, pues muchos paquetes están construidos para este tipo de estructura, tal es el caso de \emph{ggplot}, para ello, R cuenta con herramientas para facilitar la conversión de tablas de una estructura clásica a una del tipo \textbf{tidy}. Una tabla de la forma clásica tiene una estructura similar a la tabla \ref{tab:australia}, en donde cada columna contiene una variable de interés, y cada renglón a una observación por ejemplo, la producción de chocolate y cerveza en un periodo se muestra en un mismo renglón pero en diferente columna. Sin embargo, una estructura siguiendo la metodología \textbf{tidy} lo que propone es que el conjunto de datos sea ordenado siguiendo las siguientes \href{https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html}{reglas}:
+
+\begin{itemize}
+\tightlist
+\item
+  Las cabeceras de las columnas son valores, no nombres de variables.
+\item
+  Se almacenan múltiples variables en una columna.
+\item
+  Las variables se almacenan tanto en filas como en columnas.
+\item
+  Se almacenan múltiples tipos de unidades de observación en la misma tabla.
+\item
+  Una misma unidad de observación se almacena en varias tablas.
+\end{itemize}
+
+De esta manera, la tabla de variables económicas siguiendo esta metodología, pasa de un enfoque clásico como \ref{tab:australia} a uno ordenado bajo \textbf{tidy} de la forma \ref{tab:australiatidy}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr) }\CommentTok{\#Libreria de manejo de datos}
+\FunctionTok{library}\NormalTok{(tidyr) }\CommentTok{\#Libreria auxliar para convertir base a tidy}
+
+\NormalTok{cbe.base.tidy }\OtherTok{=}\NormalTok{ cbe.base }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\#base de donde sacamos información}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{time =}      \CommentTok{\#Creamos una variable que se llame time}
+           \FunctionTok{as.Date}\NormalTok{(  }\CommentTok{\#Por defecto es una secuencia del timpo datetime, así que convertimos a Date}
+                \FunctionTok{seq}\NormalTok{(}\FunctionTok{ISOdate}\NormalTok{(}\DecValTok{1958}\NormalTok{,}\DecValTok{01}\NormalTok{,}\DecValTok{01}\NormalTok{),  }\CommentTok{\#secuencia, fecha inicial}
+                \FunctionTok{ISOdate}\NormalTok{(}\DecValTok{1990}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{01}\NormalTok{),  }\CommentTok{\#Fecha final }
+                \AttributeTok{by =} \StringTok{"month"}\NormalTok{) }\CommentTok{\# cantidad de incremento}
+\NormalTok{                )  }
+\NormalTok{         ) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#Pasamos la \textquotesingle{}nueva base\textquotesingle{} a la opción gather para convertir a tidy}
+  \FunctionTok{gather}\NormalTok{(}\AttributeTok{key=}\StringTok{\textquotesingle{}serie\textquotesingle{}}\NormalTok{,  }\CommentTok{\#Columna a crear donde se almacenan las variables}
+         \AttributeTok{value=}\StringTok{\textquotesingle{}Produccion\textquotesingle{}}\NormalTok{, }\CommentTok{\#columna donde se almacena el valor de la variable }
+         \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#Columnas a transponer}
+  \FunctionTok{arrange}\NormalTok{(time)  }\CommentTok{\# ordenamos los datos por fecha}
+\FunctionTok{head}\NormalTok{(cbe.base.tidy, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:australiatidy}Variables económicas de Australia de 1958 a diciembre de 1990 }
+\centering
+\begin{tabular}[t]{llr}
+\toprule
+time & serie & Produccion\\
+\midrule
+1958-01-01 & choc & 1451.0\\
+1958-01-01 & beer & 96.3\\
+1958-01-01 & elec & 1497.0\\
+1958-02-01 & choc & 2037.0\\
+1958-02-01 & beer & 84.4\\
+\addlinespace
+1958-02-01 & elec & 1463.0\\
+1958-03-01 & choc & 2477.0\\
+1958-03-01 & beer & 91.2\\
+1958-03-01 & elec & 1648.0\\
+1958-04-01 & choc & 2785.0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La tabla \ref{tab:australiatidy}, fue creada utilizando dplyr, y tidyr ya que son librerías muy versátiles para el manejo de datos y sumamente amplias por lo que sólo se comentará las funciones empleadas, el lector que lo desee puede aprender más sobre el tema en la introducción oficial contenida en el siguiente \href{https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html}{link}. Dplyr y tidyr forman parte de una gran serie de paquetes que en conjunto son llamados \emph{tidyverse}. Dplyr es la raíz de la programación de este tipo de funciones, aunque en primera instancia destaca la cantidad de código que se ha de implementar, este conjunto de funciones está diseñado para permitir la manipulación de datos de una manera intuitiva y fácil de usar, cada función que se invoca debe ser seguida con el operador denominado \emph{pipe} el cual se denota como \(\%>\%\) Las funciones más importantes contenidas en diplyr son las siguientes:
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{select()}, función que recibe como parámetros todas las columnas con las que se realizará un subconjunto de la tabla original, es decir, como dice su nombre selecciona las columnas de base principal.
+\item
+  \emph{filter()}, función que recibe una condición dada por el usuario para filtrar la información que cumple dicha condición.
+\item
+  \emph{arrange()}, permite ordenar el data.frame bajo la columna o columnas indicadas.
+\item
+  \emph{mutate()}, permite la creación de nueva columna, ya sea a través de valores contantes u operaciones entre columnas.
+  *\emph{group by()}, permite especificar las columnas que se van a agrupar, para que dentro de esta agrupación se ejecute operación de resumen.
+\item
+  \emph{summarize()}, permite resumir la información de una variable respecto a la agrupación hecha en el punto anterior, por ejemplo, puede agruparse los datos por una variable de interés y sobre otra. conocer la suma, conteo, valores máximo o mínimos sobre la variable de agrupación.
+\item
+  \emph{gather()}, función dentro de tidyr que permite transponer los datos para transformar de una tabla clásica a una tabla tidyr.
+\item
+  \emph{spread()}, función dentro de tidyr, que permite transponer los datos para transformar una tabla tidyr a una clásica.
+\end{itemize}
+
+Quien conozca programación en SQL muchas de las funciones mostradas le serán muy familiares, pues al final este es uno de los objetivos de \textbf{dplyr}, heredar la idea lógica de la programación SQL para que esta sea adaptada en R y permitir un manejo de datos adecuado.
+
+Es importante transformar los datos de una serie con enfoque clásico a uno con enfoque \emph{tidy}, ya que muchos de los análisis o procedimientos precargados en R se basan en tablas con esta estructura. Adaptar los datos a este formato requiere un trabajo inicial, pero ese trabajo vale la pena a largo plazo, el ejemplo puede observarse en la grafica \ref{fig:ggplotAustralia} la cual fue generada con el siguiente código:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(cbe.base.tidy, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{time, }\AttributeTok{y=}\NormalTok{Produccion, }\AttributeTok{color=}\NormalTok{serie)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{Images/electric_ggplot} 
+
+}
+
+\caption{Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia}\label{fig:ggplotAustralia}
+\end{figure}
+
+Como se aprecia en la figura \ref{fig:ggplotAustralia}, en un mismo diagrama se encuentran graficadas las tres series de tiempo, el problema que se presenta es que aunque se pueden mover los ejes para observar mejor el flujo de la información las cantidades no están en la misma escala es por ello que la producción de cerveza no se puede apreciar de la manera correcta, sin embargo, se puede notar, que aunque no se pueden comprar pues son unidades de medida completamente diferente al menos porcentualmente, la producción de chocolate se ha estancado a diferencia del consumo de energía eléctrica que ha tenido un crecimiento constante.
+
+Debido a que se tiene la información en un formato \textbf{tidy}, el código puede ser modificado rápidamente para poder retratar de mejor manera las series de tiempo. Por el error observado anteriormente, ahora no interesaría graficar las tres series en una misma gráfica si no generar tres gráficas independientes en la que se pueda apreciar el comportamiento tal como se obtiene en la grafica \ref{fig:ggplotAustralia2}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(cbe.base.tidy, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{time, }\AttributeTok{y=}\NormalTok{Produccion, }\AttributeTok{color=}\NormalTok{serie)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{serie,   }\CommentTok{\#Realiza una gráfica por cada serie }
+             \AttributeTok{scales  =} \StringTok{\textquotesingle{}free\textquotesingle{}}\NormalTok{,  }\CommentTok{\#Inidica que las escalas sean libres para cada gráfica}
+             \AttributeTok{ncol=}\DecValTok{1}\NormalTok{) }\CommentTok{\#Número de columnas en la gráfica final }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/ggplotAustralia2-1} 
+
+}
+
+\caption{Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia}\label{fig:ggplotAustralia2}
+\end{figure}
+
+Tal como ocurrió en el ejemplo de la sección anterior \ref{coneldo}, la cantidad de código y conceptos que hubo que emplear fue bastante con \emph{ggplot}, sin embargo, el resultado visualmente es excelente, ya que si el lector se encuentra interesado en graficar puede copiar las funciones y sólo cambiar los aspectos estéticos dando resultados a la medida de las necesidades. Aunque \emph{ggplot} es bueno para reportes posiblemente en la practica necesite resultados más inmediatos y no tan estéticos pues sería una primera fase de análisis. Debido a esta razón puede crear objetos de series de tiempo independientes para posteriormente unirlos en un objeto múltiple. La ventaja de esta labor es que cada comando o función que sea empleada serán aplicadas en todas las series contenidas en este objeto de series de tiempo múltiple.
+
+Siguiendo entonces esta metodología, lo primero que se deberá de realizar, es convertir cada columna de la base \emph{cbe.base} a objetos de series de tiempo. Se sabe que cada secuencia de datos fue recopilada de manera mensual de enero de 1958 a diciembre de 1990, así que estas consideraciones deberán ser ingresadas como parámetro en la función \emph{ts()}. Una vez que se tengan las tres series de tiempo creadas, se usará la función \emph{ts.intersect()} para crear un objeto de serie de tiempo múltiple.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{elec.ts }\OtherTok{=} \FunctionTok{ts}\NormalTok{(cbe.base}\SpecialCharTok{$}\NormalTok{elec, }\AttributeTok{start=}\DecValTok{1958}\NormalTok{, }\AttributeTok{freq=}\DecValTok{12}\NormalTok{) }\CommentTok{\#Creación de la serie elec}
+\NormalTok{beer.ts }\OtherTok{=} \FunctionTok{ts}\NormalTok{(cbe.base}\SpecialCharTok{$}\NormalTok{beer, }\AttributeTok{start=}\DecValTok{1958}\NormalTok{, }\AttributeTok{freq=}\DecValTok{12}\NormalTok{) }\CommentTok{\#Creación de la serie beer}
+\NormalTok{choc.ts }\OtherTok{=} \FunctionTok{ts}\NormalTok{(cbe.base}\SpecialCharTok{$}\NormalTok{choc, }\AttributeTok{start=}\DecValTok{1958}\NormalTok{, }\AttributeTok{freq=}\DecValTok{12}\NormalTok{) }\CommentTok{\#Creación de la serie choc}
+\CommentTok{\#Se crea el objeto de serie de tiempo multiple}
+\NormalTok{cbe.ts }\OtherTok{=} \FunctionTok{ts.intersect}\NormalTok{(elec.ts, beer.ts, choc.ts)}
+
+\FunctionTok{head}\NormalTok{(cbe.ts, }\DecValTok{10}\NormalTok{) }\CommentTok{\#se imprimen los primeros 10 renglones}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          elec.ts beer.ts choc.ts
+## Jan 1958    1497    96.3    1451
+## Feb 1958    1463    84.4    2037
+## Mar 1958    1648    91.2    2477
+## Apr 1958    1595    81.9    2785
+## May 1958    1777    80.5    2994
+## Jun 1958    1824    70.4    2681
+## Jul 1958    1994    74.8    3098
+## Aug 1958    1835    75.9    2708
+## Sep 1958    1787    86.3    2517
+## Oct 1958    1699    98.7    2445
+\end{verbatim}
+
+Crear esta intersección de series de tiempo es muy importante ya que como los datos tienen una misma periodicidad todas las funciones de resumen puede ser empleadas sobre este objeto y no sobre las múltiples series de tiempo, por ejemplo, se puede consultar la clase del objeto que se acaba de crear, dando como resultado que es una matriz de serie de tiempo (mts), de igual manera, se obtiene el inicio, fin y frecuencia de la serie de tiempo, y la función \emph{summary} es capaz de resumir la información para cada serie proporcionando los valores mínimos, cuartiles y media.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(cbe.ts)}\CommentTok{\#El formato de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "mts"    "ts"     "matrix"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{start}\NormalTok{(cbe.ts)}\CommentTok{\#El incio de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1958    1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{end}\NormalTok{(cbe.ts) }\CommentTok{\#Último perido donde se almacena información}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1990   12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{frequency}\NormalTok{(cbe.ts)}\CommentTok{\#La frecuencia de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(cbe.ts) }\CommentTok{\#Información de la distribución de los datos}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     elec.ts         beer.ts         choc.ts    
+##  Min.   : 1463   Min.   : 69.2   Min.   :1066  
+##  1st Qu.: 3239   1st Qu.:113.7   1st Qu.:3460  
+##  Median : 5891   Median :140.6   Median :4579  
+##  Mean   : 6312   Mean   :137.6   Mean   :4685  
+##  3rd Qu.: 8820   3rd Qu.:159.7   3rd Qu.:5735  
+##  Max.   :14338   Max.   :217.8   Max.   :9558
+\end{verbatim}
+
+Esta construcción también es útil ya que permite la generación de gráficas más sencillas utilizado la programación nativa de R. Al indexar el tiempo, simplemente se ejecuta la opción \emph{plot()}, se añade el objeto de serie de tiempo múltiple y de manera opcional puede modificar algunos aspectos gráficos, dando como resultado la gráfica \ref{fig:plotAustraliats}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(cbe.ts, }
+     \AttributeTok{main=} \StringTok{\textquotesingle{}Consumo de electricidad, de cerveza y chocolate en Australia\textquotesingle{}}\NormalTok{,}
+     \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+     \AttributeTok{col =} \StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotAustraliats-1} 
+
+}
+
+\caption{Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia}\label{fig:plotAustraliats}
+\end{figure}
+
+De igual manera, pueden generarse gráficas utilizando el objeto \emph{xts}, recordar que esta clase puede heredar al objeto \emph{ts} por lo que sólo se tiene que especificar la transformación de dicho objeto con \emph{as.xts()}. Una vez transformada la variable, sólo se hará uso de la función \emph{plot()}, en este caso añadimos ciertos parámetros para hacer la gráfica equivalente a las figuras \ref{fig:ggplotAustralia2} y \ref{fig:plotAustraliats}, en caso de no añadir los últimos códigos el resultado será equivalente a la figura \ref{fig:ggplotAustralia2}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbe.xts }\OtherTok{=} \FunctionTok{as.xts}\NormalTok{(cbe.ts)}
+\FunctionTok{plot}\NormalTok{(cbe.xts, }
+     \AttributeTok{main=} \StringTok{\textquotesingle{}Consumo de electricidad, de cerveza y chocolate en Australia\textquotesingle{}}\NormalTok{,}
+     \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+      \AttributeTok{multi.panel =} \DecValTok{3}\NormalTok{, }\CommentTok{\# Para generar 3 paneles (de lo contarario el resultado sería a ggplot)}
+     \AttributeTok{yaxis.same =} \ConstantTok{FALSE}\NormalTok{) }\CommentTok{\#Para que los ejes se adapten a cada serie}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotAustraliaxts-1} 
+
+}
+
+\caption{Gráfica sobre el consumo de electricidad y producción de cerveza y chocolate en Australia}\label{fig:plotAustraliaxts}
+\end{figure}
+
+Tal como se mencionó en la sección \ref{coneldo}, el lector puede elegir el método que mejor se adapte a sus necesidades, sin embargo, lo más recomendable es usar el objeto \emph{xts} ya que este tipo de gráficas se encuentran equilibradas, la cantidad de código no es excesiva y visualmente son presentables.
+
+De las gráficas \ref{fig:ggplotAustralia2}, \ref{fig:plotAustraliats}, \ref{fig:plotAustraliaxts} puede observarse que las series tienen tendencias muy variadas; la primera, el consumo de electricidad tiene una clara ciclicidad y tendencia positiva que se comporta prácticamente lineal a lo largo del tiempo. Sin embargo, en la producción de chocolate y cerveza se observa una variación estacional que se repite a lo largo del tiempo, sin embargo, su tendencia aunque es positiva hay periodos en los que prácticamente se comporta de manera constante.
+
+También se puede ver gráficamente que existe una correlación muy alta entre el consumo de electricidad y la producción de chocolate, es decir, si una aumenta la otra lo hace en una proporción muy parecida, por lo que las series a estimar debería de involucrar una correlación parecida es por ello por lo que las dos gráficas tienen un aspecto similar. Sin embargo, es importante tener en cuenta que esta correlación es engañosa y no puede establecer una causalidad ya que, aunque los dos involucran a aspectos de Australia no hay una clara relación de que el aumentar la producción de chocolate la producción aumente en la misma proporción, a este tipo de correlaciones se llaman relaciones espurias; La correlación existe porque ambos conjuntos de datos tienen una tendencia subyacente y una variación estacional. Cualquier serie que tenga una tendencia tenderá a estar correlacionada con cualquier otra serie que tenga tendencia parecida. Por esta razón, es preferible eliminar las tendencias y los efectos estacionales antes de comparar varias series.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(corrplot) }\CommentTok{\#Librería para gráficar correlaciones}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.90 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbe.matrix }\OtherTok{=} \FunctionTok{cor}\NormalTok{(cbe.ts) }\CommentTok{\#Correlaciones}
+\FunctionTok{corrplot.mixed}\NormalTok{(cbe.matrix, }\AttributeTok{lower.col=}\StringTok{"black"}\NormalTok{, }\AttributeTok{upper=}\StringTok{"color"}\NormalTok{) }\CommentTok{\#gráfica de correlaciones}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plotcorrelacion-1} 
+
+}
+
+\caption{Correlaciones sobre el consumo de electricidad y producción de cerveza y chocolate en Australia}\label{fig:plotcorrelacion}
+\end{figure}
+
+Para visualizar las tendencias de la serie se usará la función de \emph{aggregate()} para calcular las medias móviles y detectar gráficamente la tendencia sin el efecto de la periodicidad
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbe.tendencia }\OtherTok{=} \FunctionTok{aggregate}\NormalTok{(cbe.ts)}
+\FunctionTok{plot}\NormalTok{(cbe.tendencia, }\AttributeTok{col=}\StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{, }
+    \AttributeTok{main=}\StringTok{\textquotesingle{}Tendencia del consumo eléctrico\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{ylab=}\StringTok{\textquotesingle{}Miles de Wats/h\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics{TimeSeries_files/figure-latex/plottendenciamulti-1} 
+
+}
+
+\caption{Gráfica de las tendencias de la serie referentes a Australia}\label{fig:plottendenciamulti}
+\end{figure}
+
+Como se aprecia, el consumo de electricidad tiene una clara tendencia al alta, mientras que la producción de cerveza a pesar de que tenía un crecimiento constante de 1950 a 1974, desde 1975, la tendencia se mantiene constante con pequeñas subidas y bajadas en el tiempo. Por último, la producción de chocolate tiene una tendencia al alta, sin embargo, a lo largo del tiempo ha presentado incrementos y decrementos constantes en todo el intervalo de observación.
+
+Para la ciclicidad, no existe una función que se pueda emplear sobre este objeto múltiple, así que se realizará la función \emph{ggseasonplot()} para consultar la variación estacional
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{)) }\CommentTok{\#Permite graficar dos gráficas en una ventana}
+
+
+\FunctionTok{ggseasonplot}\NormalTok{(elec.ts,}
+             \AttributeTok{polar=}\ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{main=}\StringTok{"Periodicidad del consumo de energía eléctrica"}\NormalTok{ )}
+\FunctionTok{ggseasonplot}\NormalTok{(beer.ts,}
+             \AttributeTok{polar=}\ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{main=}\StringTok{"Periodicidad del consumo de la producción de cerveza"}\NormalTok{ )}
+\FunctionTok{ggseasonplot}\NormalTok{(choc.ts,}
+             \AttributeTok{polar=}\ConstantTok{TRUE}\NormalTok{, }
+             \AttributeTok{main=}\StringTok{"Periodicidad del consumo de la producción de chocolate"}\NormalTok{ )}
+
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.33\linewidth]{TimeSeries_files/figure-latex/plotPeriodicidadcbe-1} \includegraphics[width=0.33\linewidth]{TimeSeries_files/figure-latex/plotPeriodicidadcbe-2} \includegraphics[width=0.33\linewidth]{TimeSeries_files/figure-latex/plotPeriodicidadcbe-3} 
+
+}
+
+\caption{Gráfica de la variación de la serie CBE}\label{fig:plotPeriodicidadcbe}
+\end{figure}
+
+Se decidió hacer la gráfica \ref{fig:plotPeriodicidadcbe} de manera polar, pues debido a la gran cantidad de años que se analizan el resultado no sería claramente visualizado. En dicha figura, se observa que la primera gráfica hace referencia a la variación estacional del consumo eléctrico, en ella se aprecia que el consumo se comporta de manera lineal a lo largo del año, aunque existe un mayor consumo en los meses de junio a agosto mientras que en abril hay un menor consumo. La segunda gráfica hace referencia a la producción de cerveza, el comportamiento es más variado año tras año, pero se puede apreciar que en enero y febrero sucede que la producción es muy baja, después empieza a aumentar paulatinamente hasta diciembre, mes en el cual se encuentra la mayor producción del año. Mientras que la producción de chocolate, la ciclicidad es fácil de observar, en enero la producción es muy baja posteriormente empieza a aumentar hasta agosto y octubre donde se realiza la mayor producción después de estas fechas la producción empieza a caer para el resto del año.
+
+\hypertarget{pasajeros-auxe9reos}{%
+\subsection{Pasajeros aéreos}\label{pasajeros-auxe9reos}}
+
+Otra de la serie de tiempo que se estará analizando será \textbf{Air Passengers}, esta es posiblemente una de las series más utilizadas ya que se presenta a detalle en el texto Box \& Jenkins (1976) , uno de los libros pioneros en el análisis estadístico de las series de tiempo, aunque la recopilación de los datos y análisis corresponde a Brown (1962).
+
+La base \textbf{Air Passengers} hace referencia al número de personas (en miles) que viajan mensualmente en una cierta aerolínea internacional de pasajeros durante el periodo de enero de 1949 a diciembre de 1960.
+
+Debido a la gran importancia histórica y que es de gran utilidad para ilustrar los conceptos de la exploración de los datos de series de tiempo, esta base se encuentra precargada en R, sólo será necesario invocarla con el comando para poder utilizarla, \emph{AirPassengers}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{AP.ts }\OtherTok{=}\NormalTok{ AirPassengers}
+\NormalTok{AP.ts}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+## 1949 112 118 132 129 121 135 148 148 136 119 104 118
+## 1950 115 126 141 135 125 149 170 170 158 133 114 140
+## 1951 145 150 178 163 172 178 199 199 184 162 146 166
+## 1952 171 180 193 181 183 218 230 242 209 191 172 194
+## 1953 196 196 236 235 229 243 264 272 237 211 180 201
+## 1954 204 188 235 227 234 264 302 293 259 229 203 229
+## 1955 242 233 267 269 270 315 364 347 312 274 237 278
+## 1956 284 277 317 313 318 374 413 405 355 306 271 306
+## 1957 315 301 356 348 355 422 465 467 404 347 305 336
+## 1958 340 318 362 348 363 435 491 505 404 359 310 337
+## 1959 360 342 406 396 420 472 548 559 463 407 362 405
+## 1960 417 391 419 461 472 535 622 606 508 461 390 432
+\end{verbatim}
+
+Como se aprecia, el resultado tiene un comportamiento parecido a un objeto \emph{ts} ya que la información se encuentra indexada y acomodado en el formato típico. Así que se comprobará esta suposición.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(AP.ts)}\CommentTok{\#El formato de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "ts"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{start}\NormalTok{(AP.ts)}\CommentTok{\#El incio de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1949    1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{end}\NormalTok{(AP.ts)}\CommentTok{\#El fin de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1960   12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{frequency}\NormalTok{(AP.ts)}\CommentTok{\#La frecuencia de la serie de tiempo es}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(AP.ts) }\CommentTok{\#Información de la distribución de los datos}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   104.0   180.0   265.5   280.3   360.5   622.0
+\end{verbatim}
+
+Debido a la función \emph{class()} se conoce que efectivamente \emph{AirPassengers} al ser una base precargada tiene este procesamiento por lo que no es necesario volver a definir los datos como objeto \emph{ts}. De igual manera se observa que los datos tienen una periodicidad mensual en el cual el primer dato es registrado en enero de 1949 y el último en diciembre de 1960. El valor de miles de personas que viajan en esa Aerolínea es 104, las personas medias 265.5 y el valor máximo que se tuvo registro fue 622 mil pasajeros interesados en viajar con esta aerolínea.
+
+Ya que los datos se encuentran previamente creados, sólo se realizarán las gráficas basadas en \emph{ts} y el objeto \emph{xts} los cuales puedes consultarse en la gráfica \ref{fig:plotAP}, al estar ya creado este objeto facilita mucho el análisis y la generación de los diagramas mostrados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+
+\FunctionTok{plot}\NormalTok{(AP.ts,  }\AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{, }
+     \AttributeTok{ylab =} \StringTok{\textquotesingle{}Miles de pasajeros\textquotesingle{}}\NormalTok{,}
+     \AttributeTok{main =} \StringTok{\textquotesingle{}Frecuencia de pasajeros de una aerolínea\textquotesingle{}}\NormalTok{,}
+     \AttributeTok{col=}\StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{AP.xts }\OtherTok{=} \FunctionTok{as.xts}\NormalTok{(AP.ts)}
+\FunctionTok{plot}\NormalTok{(AP.xts,}
+      \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{, }
+     \AttributeTok{ylab =} \StringTok{\textquotesingle{}Miles de pasajeros\textquotesingle{}}\NormalTok{,}
+      \AttributeTok{col =} \StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{, }
+     \AttributeTok{grid.ticks.on =} \StringTok{\textquotesingle{}quarters\textquotesingle{}}\NormalTok{, }\CommentTok{\#Crea líneas verticales sobre la gráfica cada trimestre}
+     \AttributeTok{major.ticks =} \StringTok{\textquotesingle{}quarters\textquotesingle{}}\NormalTok{,  }\CommentTok{\#Crea líneas verticales sobre la gráfica cada trimestre}
+     \AttributeTok{minor.ticks =}\StringTok{\textquotesingle{}years\textquotesingle{}}\NormalTok{, }\CommentTok{\# Escribe la etiqueta de los meses cada cierto tiempo}
+     \AttributeTok{grid.col =} \StringTok{\textquotesingle{}lightgrey\textquotesingle{}}\NormalTok{, }\CommentTok{\#color líneas verticales}
+     \AttributeTok{main=}\StringTok{\textquotesingle{}Frecuencia de pasajeros de una aerolínea\textquotesingle{}}
+     
+\NormalTok{     )}
+
+
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{TimeSeries_files/figure-latex/plotAP-1} 
+
+}
+
+\caption{Gráfica de frecuencia de pasajeros de una aerolínea.}\label{fig:plotAP}
+\end{figure}
+
+En la gráfica \ref{fig:plotAP} se puede notar que la gráfica superior corresponde a la representación por medio del objeto \emph{ts}, mientras que la inferior al objeto \emph{xts}. Ambas gráficas muestran la misma información, sin embargo, debido a la construcción del \emph{xts} permite un mayor control y ubicación en el tiempo pues presenta líneas auxiliares dentro de la misma gráfica.
+
+De manera general se puede concluir que la cantidad de pasajeros de esta aerolínea tiene una tendencia positiva pues conforme pasa el tiempo una mayor cantidad de personas están realizando un viaje en esta aerolínea, de igual manera, existe un ciclo o periodicidad anual en el cual cada año se puede percibir una clara variación estacional en el cual a inicios de año la cantidad de vuelos es menor pero aumentando paulatinamente hasta la temporada vacacional de verano donde se alcanzan los máximos por año y de ahí empieza a disminuir para el resto del año. Se aprecia que conforme aumenta el tiempo más variabilidad existen en los datos, pues al comienzo la varianza de los datos visualmente es menor y en tiempos posteriores la varianza aumenta creando ciclos cada vez más pronunciados. Estos comentarios son respaldados con las gráficas contenidas en la figura \ref{fig:clipeAP}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\DocumentationTok{\#\# Tendencia}
+\NormalTok{AP.tendencia }\OtherTok{=} \FunctionTok{aggregate}\NormalTok{(AP.ts)}
+
+\FunctionTok{plot}\NormalTok{(AP.tendencia, }\AttributeTok{col=}\StringTok{\textquotesingle{}steelblue\textquotesingle{}}\NormalTok{, }
+    \AttributeTok{main=}\StringTok{\textquotesingle{}Tendencia de la cantidad de pasajeros\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+    \AttributeTok{ylab=}\StringTok{\textquotesingle{}Miles pasajeros\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# Periodicidad}
+\FunctionTok{boxplot}\NormalTok{(AP.ts }\SpecialCharTok{\textasciitilde{}} \FunctionTok{cycle}\NormalTok{(AP.ts),}
+        \AttributeTok{col =} \StringTok{"orange"}\NormalTok{, }\CommentTok{\# Color de relleno}
+        \AttributeTok{border =} \StringTok{"brown"}\NormalTok{, }\CommentTok{\#Color de contorno}
+        \AttributeTok{main=}\StringTok{\textquotesingle{}Peridicidad de la cantidad de pasajeros\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{xlab=} \StringTok{\textquotesingle{}Tiempo\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{ylab=}\StringTok{\textquotesingle{}Miles pasajeros\textquotesingle{}}\NormalTok{,}
+        \AttributeTok{names =}\NormalTok{ month.abb }\CommentTok{\# Agregar nombres puede ser month.abb o month.name o }
+                          \CommentTok{\#cualquier vector personalizado}
+\NormalTok{        )}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{TimeSeries_files/figure-latex/clipeAP-1} 
+
+}
+
+\caption{Periodicidad y tendencia de pasajeros de una aerolínea.}\label{fig:clipeAP}
+\end{figure}
+
+Como se aprecia en la figura \ref{fig:clipeAP} se refuerzan los comentarios anteriores, existe un aumento progresivo a lo largo del tiempo de manera creciente lineal por lo que se dice que sigue una tendencia. Se observa una periodicidad en forma de campana en el cual la mayor cantidad de viajes ocurre en julio y agosto, después de estas fechas existe un decrecimiento en la cantidad de vuelos.
+Es importante tratar de describir el motivo de estos cambios, pues de esta manera, las estimaciones y resultados pueden evaluarse para decidir si se apegan o no a los datos. Así el aumento de la demanda de viajes aéreos puede debido a precios más competitivos, mayor disponibilidad de aviones o la apertura comercial que se ha vivido en últimas fechas, así como tratados internacionales han permitido que acceder a otros países sea más sencillo y las personas se encuentren más motivados a realizar estos viajes; la demanda en determinadas épocas del año corresponde a los periodos vacacionales, lo que podría explicar la variación estacional. Por otra parte, el aumento de la población podría explicar la tendencia al aumento constante.
 
   \bibliography{book.bib,packages.bib}
 
